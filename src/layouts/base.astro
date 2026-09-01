@@ -168,6 +168,7 @@ const stampTone = staleDays > 14 ? "stale" : REPORT.fail > 0 ? "err" : "";
       const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
       const load = () => {
         if (idx) return Promise.resolve(idx);
+        if (!("fetch" in window)) return Promise.resolve(null);
         if (pend) return pend;
         try { const raw = localStorage.getItem("xr-ask-idx"); if (raw) { const c = JSON.parse(raw); if (c && c.j && c.j.chunks && Date.now() - c.at < 6 * 36e5) { idx = c.j; idx.chunks.forEach((x) => { x.L = x.x.toLowerCase(); }); roots.forEach((r) => { const n = r.querySelector("#ask-n"); if (n && !n.dataset.set) { n.textContent = idx.n + " chunks · site indexed " + idx.gen.slice(0, 10) + " · cached, instant"; n.dataset.set = "1"; } }); return Promise.resolve(idx); } } } catch {}
         return (pend = fetch("/data/chat-index.json").then((r) => (r.ok ? r.json() : Promise.reject())).then((j) => {
