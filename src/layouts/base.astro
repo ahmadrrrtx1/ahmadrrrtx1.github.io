@@ -94,12 +94,12 @@ const stampTone = staleDays > 14 ? "stale" : REPORT.fail > 0 ? "err" : "";
         </div>
         <div class="fcol"><p class="label">fine print</p>
           <a href="/privacy">privacy</a><a href="/cookies">cookies</a>
-          <a href="mailto:{CONTACT.email}">{CONTACT.email}</a>
+          <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
         </div>
       </nav>
       <div class="fmeta">
         <span>© <span id="yr">2026</span> Muhammad Ahmad — built static, no trackers, see <a href="/privacy">privacy</a></span>
-        <span class="stamp {stampTone}" title="Every claim on this site links to evidence; a nightly job re-checks all of it.">
+        <span class={`stamp ${stampTone}`} title="Every claim on this site links to evidence; a nightly job re-checks all of it.">
           <span class="dot" aria-hidden="true"></span>
           evidence verified {REPORT.verifiedAt ? REPORT.verifiedAt.slice(0, 10) : "never"} · {REPORT.pass}/{REPORT.total} links live
           <span class="sr-only">(last check {relTime(REPORT.verifiedAt)})</span>

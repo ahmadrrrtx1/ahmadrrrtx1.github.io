@@ -66,7 +66,7 @@ const jsonld = {
           <span style="display:flex;gap:8px;padding:4px 10px">
             <a href={CONTACT.github} rel="noopener" aria-label="GitHub" title="GitHub"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A7.98 7.98 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
             <a href={CONTACT.linkedin} rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.6 5.2H.9V15h2.7V5.2ZM.78 2.5a1.56 1.56 0 1 1 3.12 0 1.56 1.56 0 0 1-3.12 0ZM8.32 15h2.7v-5.3c0-1.42.03-2.82-.72-3.84-.74-1.02-2.03-2.04-3.98-2.04l.01 2.78s.02.05.03.07c0-.02-.02-.04-.03-.05V5.2h-.01l.01 2.61Z"/></svg></a>
-            <a href="mailto:{CONTACT.email}" aria-label="Email" title="Email"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="m1.6 3.8 6.4 5 6.4-5"/></svg></a>
+            <a href={`mailto:${CONTACT.email}`} aria-label="Email" title="Email"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="m1.6 3.8 6.4 5 6.4-5"/></svg></a>
           </span>
         </div>
       </div>
@@ -249,7 +249,7 @@ const jsonld = {
       <Panel id="connect" cmd="connect">
         <div class="flex wrap-flex center between" style="gap:16px">
           <div style="display:grid;gap:4px;font-size:12.5px;color:var(--text-2)">
-            <span>email → <a class="tlink" href="mailto:{CONTACT.email}">{CONTACT.email}</a> <button class="chip" data-copy={CONTACT.email} type="button" style="cursor:pointer" data-glyph="⧉">copy</button></span>
+            <span>email → <a class="tlink" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> <button class="chip" data-copy={CONTACT.email} type="button" style="cursor:pointer" data-glyph="⧉">copy</button></span>
             <span>github → <a class="tlink" href={CONTACT.github} rel="noopener">github.com/ahmadrrrtx</a> · client work → <a class="tlink" href={CONTACT.agency} rel="noopener">rrrtx-systems.com</a></span>
             <span>writing → <a class="tlink" href={NEWSLETTER} rel="noopener">ahmadrrrtx.substack.com ↗</a> — newsletter, occasional engineering notes, unsubscribe anytime</span>
             <span class="meta">also on {PROFILES.filter((p) => p.label !== "github").map((p) => <>· <a class="tlink" href={p.href} rel="noopener">{p.label} ↗</a></>)} </span>

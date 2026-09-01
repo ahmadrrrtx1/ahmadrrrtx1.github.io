@@ -11,7 +11,7 @@ import { CONTACT, HAS_RESUME, NEWSLETTER, PROFILES } from "../lib/site";
         contract work on agent systems, automation, or evaluation pipelines. I answer within a day,
         timezone-wise, because client work trained that reflex.</p>
         <div class="cta-row" style="margin:18px 0">
-          <a class="btn primary" href="mailto:{CONTACT.email}?subject={encodeURIComponent('from your console')}&body={encodeURIComponent('> whoami\n')}" >
+          <a class="btn primary" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('from your console')}&body=${encodeURIComponent('> whoami\n')}`} >
             <span class="caret" aria-hidden="true">&gt;</span> {CONTACT.email}
           </a>
           <button class="btn ghost" data-copy={CONTACT.email} type="button">⧉ copy address</button>

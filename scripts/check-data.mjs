@@ -59,6 +59,13 @@ for (const f of walk("src")) {
     if (m) errors.push(`banned phrase ${re} in ${f} (found "${m[0]}")`);
   }
 }
+// template regression guard: quoted attributes must not contain {expr} — Astro ships those literal
+for (const f of walk("src").filter((x) => x.endsWith(".astro"))) {
+  const tpl = readFileSync(f, "utf8").replace(/<script[\s\S]*?<\/script>/g, "").replace(/<style[\s\S]*?<\/style>/g, "");
+  for (const m of tpl.matchAll(/="[a-zA-Z&?:./=; -]*\{[^}]*\}[^"\n]*"/g)) {
+    errors.push(`quoted-attr partial interpolation in ${f}: ${m[0].slice(0, 70)} — use attr={\`…\`}`);
+  }
+}
 
 if (errors.length) {
   console.error("✘ check-data failed:\n  " + errors.join("\n  "));
