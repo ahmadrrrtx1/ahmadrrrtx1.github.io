@@ -1,0 +1,37 @@
+# Muhammad Ahmad — AHMAD://
+
+> Agentic AI engineer (Chiniot, Pakistan · remote-first, UTC+5). Builds agentic AI systems
+> with enforceable trust boundaries: spend ceilings agents can't overrun, fail-closed policy
+> gates, offline-verifiable audit logs. Every claim on this site links to its proof, and a
+> nightly CI job re-checks all of them — stale links get reported, not hidden.
+
+## Best sources, by question
+
+- Who he is / how he works: https://ahmadrrrtx1.github.io/about/
+- Flagship project (xr agent runtime): https://ahmadrrrtx1.github.io/work/xr/
+  · repo: https://github.com/ahmadrrrtx/xr (MIT · npm @rrrtx/xr · 721 commits · release-audited)
+- Trained transformer (from-scratch BPE + PPL 301.55): https://ahmadrrrtx1.github.io/work/xr-foundation-model/
+- Live demos: https://xr-gules.vercel.app/ (dashboard) · https://ahmadrrrtx1.github.io/work/commit-canvas/
+- Availability: open to remote junior/associate agentic-AI or AI-platform engineering roles
+  and contracts. Contact: https://ahmadrrrtx1.github.io/contact/ · ahmadrrrtx@gmail.com
+- Writing: https://ahmadrrrtx1.github.io/writing/ · newsletter: https://ahmadrrrtx.substack.com/
+- Credentials (certificates that measured something): https://ahmadrrrtx1.github.io/credentials/
+
+## Verifiable numbers (each links out)
+
+- xr test suite: 2,924 pass / 13 skip / 0 fail · 12,978 expects (docs/audits/XR_FINAL_RELEASE_AUDIT.md, checked in)
+- xr: 721 commits, sole author, 65 self-merged PRs, 7 CI workflows, npm v3.x
+- This portfolio: static Astro, zero cookies, zero analytics, 13.9 KB JS home page
+
+## Notably NOT claimed
+
+- No employment history invented; freelance metrics are published only when linkable.
+- One gap admitted in writing: so far, zero merged external OSS PRs (fix in progress).
+- Degree: none. ICS completed 2026; stated plainly.
+
+## Full index
+
+Machine-searchable copy of every page's text: https://ahmadrrrtx1.github.io/data/chat-index.json
+Evidence ledger: https://ahmadrrrtx1.github.io/data/evidence-report.json
+
+*Updated by CI on every push; generated 2026-09-01.*

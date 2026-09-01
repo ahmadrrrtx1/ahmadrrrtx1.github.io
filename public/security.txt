@@ -1,0 +1,4 @@
+Contact: mailto:ahmadrrrtx@gmail.com
+Preferred-Languages: en, ur
+Expires: 2027-09-01T00:00:00.000Z
+Comment: This is a static portfolio. Findings about the site itself are appreciated in plain email; findings about xr (the runtime) can also go through github.com/ahmadrrrtx/xr — no bounty, just credit and a fast fix.

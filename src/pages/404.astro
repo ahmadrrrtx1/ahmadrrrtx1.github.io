@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/base.astro";
+---
+<Layout title="404 — no man page found" noIndex desc="The page you asked for doesn't exist; the two that will help do.">
+  <div style="max-width:620px;margin:10vh auto 0">
+    <section class="panel">
+      <header><h1 class="sr-only">Page not found</h1><span class="prompt" style="cursor:default"><span class="caret" aria-hidden="true">&gt;</span><span>404</span></span></header>
+      <div class="body prose" style="max-width:none">
+        <p class="lead" style="font-size:17px"><code>✘ no man page found for the page you asked for.</code></p>
+        <p style="font-size:14px;color:var(--text-2)">Closest exits with actual documentation:</p>
+        <p><a class="tlink" href="/work">&gt; ls ~/work <span class="arrow">→</span></a> · <a class="tlink" href="/">&gt; whoami <span class="arrow">→</span></a> · press <span class="kbd">⌘K</span> and type something.</p>
+        <p class="meta">No hidden rooms, no easter eggs pretending to be systems — an index, not a simulation.</p>
+      </div>
+    </section>
+  </div>
+</Layout>

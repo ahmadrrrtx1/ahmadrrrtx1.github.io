@@ -1,0 +1,100 @@
+---
+import Case from "../../layouts/case.astro";
+import CodeFig from "../../components/codefig.astro";
+import DiagramTrain from "../../components/DiagramTrain.astro";
+
+const causalityExcerpt = `class TestCausality:
+    def _probe(self, attn):
+        x1 = torch.randn(1, 6, 64)
+        x2 = x1.clone()
+        x2[0, 4] = 99.0            # perturb a FUTURE position
+        o1, _ = attn(x1); o2, _ = attn(x2)
+        return (o1[0, 2] - o2[0, 2]).abs().max().item(), \\
+               (o1[0, 5] - o2[0, 5]).abs().max().item()
+
+    def test_default_path_is_causal(self):
+        attn = MultiHeadAttention(d_model=64, n_heads=4, dropout=0.0)
+        d2, d5 = self._probe(attn)
+        assert d2 == 0.0, "position 2 must not depend on position 4"
+        assert d5 > 0.0, "position 5 must depend on position 4"`;
+const jsonld = { "@context": "https://schema.org", "@type": "SoftwareSourceCode", name: "XR Foundation Model (XRFM)", codeRepository: "https://github.com/ahmadrrrtx/xr-foundation-model", programmingLanguage: "Python", license: "https://spdx.org/licenses/MIT.html", dateCreated: "2026-07-24", keywords: "transformer, from scratch, PyTorch, BPE, training, evaluation" };
+---
+<Case
+  name="xr-foundation-model" kind="RESEARCH" period="2026-07-24 → 2026-08-13" roles="solo — every line audited, most by me against independent references"
+  oneLine="A small but scientifically reproducible decoder-only transformer grown from zero — tokenizer, math, training, evals — plus a 49-finding forensic audit of my own claims, run in public and closed 49→0."
+  stack={["Python", "PyTorch", "pytest", "Docker", "CUDA-ready"]}
+  repo="https://github.com/ahmadrrrtx/xr-foundation-model"
+  evidenceIds={["f.audit", "f.ground-truth", "f.ppl", "f.tokenizer", "f.ckpt", "f.resume"]}
+  prev={["/work/xr", "xr"]} next={["/work/gemma-monitor", "Gemma Monitor"]}
+  jsonld={jsonld}
+>
+  <h2><span class="num">01</span>Why a beginner builds a tiny GPT</h2>
+  <p>Honest reason: my profile said "agentic AI" and my internals said "API caller." You can integrate
+  a provider forever without ever knowing what an attention mask <em>owes</em> you. XRFM is my answer to
+  that gap — not a model that competes with anything, but a complete, measured, reproducible training
+  pipeline where I own every layer: tokenizer → embeddings → blocks → loop → checkpoints → eval →
+  inference engine. A 30-perplexity model can teach you more about causality than a 90th-percentile
+  API wrapper.</p>
+
+  <h2><span class="num">02</span>Architecture</h2>
+  <DiagramTrain />
+  <ul>
+    <li><b>Tokenizer:</b> byte-level BPE written from scratch (<code>tokenizer/bpe.py</code>); the acceptance test is
+    exactness — <code>decode(encode(x)) == x</code> across English, Unicode (<code>"你好"</code>) and code.</li>
+    <li><b>Model:</b> pre-norm decoder blocks — RMSNorm, causal MHA with RoPE, SwiGLU FFN, weight tying;
+    explicit causal masking (a lesson learned the hard way, see §04).</li>
+    <li><b>Training:</b> AdamW β=(0.9, 0.999), cosine schedule with warmup, grad accumulation + clip,
+    seeded end-to-end, checkpoints that actually resume (step counter, optimizer, scheduler — verified
+    continuity at step 120→240).</li>
+    <li><b>Inference:</b> KV-cached generation; <code>scripts/evaluate_checkpoint.py</code> can always reproduce
+    output from a committed checkpoint.</li>
+  </ul>
+
+  <h2><span class="num">03</span>Numbers, with their method</h2>
+  <ul>
+    <li>Corpus: 1.77M tokens of public-domain prose + code; line-boundary splits, dedup, pad-loss-masking
+    so padding can't leak.</li>
+    <li>Training smoke: loss 7.66 → 6.45 over 400 steps; final val perplexity <b>301.55</b>; scaling runs 777.1 → 586.0.</li>
+    <li>Tiny overfit test: 600 steps → train loss 0.097, greedy generation reproduces training text verbatim.</li>
+    <li>Reproducibility: same seed → identical loss curve (test-enforced).</li>
+  </ul>
+  <p>Perplexity ~301 sounds like a failure until you note the diet: 1.7M tokens. A GPT-2-small needs
+  eight times that to be coherent. The number's purpose is to <em>move predictably</em> when I change
+  something — which is exactly what an eval loop is for.</p>
+
+  <h2><span class="num">04</span>The part I'm proudest of: auditing myself, publicly</h2>
+  <p>Version 0.6 had bugs a stranger would find in ten minutes, so I became that stranger. I ran a
+  forensic audit — <code>docs/audit/FORENSIC_AUDIT.md</code> — that logged <b>49 findings</b>: a broken causal
+  mask, fake bf16 (autocast without an autocast), non-resumable checkpoints, a vocab split-brain between
+  tokenizer and embedding, toy data, a dead API import. Every finding got a fix and a ground-truth test;
+  <code>FINAL_AUDIT.md</code> closes the checklist 18/18 with evidence links. The audit and its transcripts live
+  in the repo — the narrative I want attached to my name is not "first try was right," it's "found every
+  lie, including my own, and made each one a test."</p>
+  <CodeFig file="XRFM/tests/test_audit_verification.py" url="https://github.com/ahmadrrrtx/xr-foundation-model/blob/main/tests/test_audit_verification.py" code={causalityExcerpt} caption="the probe style that caught the masking bug: perturb a future token, assert the past never flinches" />
+
+  <h2><span class="num">05</span>Evidence committed, not described</h2>
+  <p>The 76.8 MB trained checkpoint is in the repo tree at <code>checkpoints/</code> alongside the 5.5 MB
+  corpus — clumsy Git hygiene, deliberate evidentiary discipline. Anyone can load it, run
+  <code>evaluate_checkpoint.py</code>, and get the same completions I claim. That sentence is the entire
+  portfolio thesis in two lines, and this project is where I proved I mean it for ML internals, not just
+  product code.</p>
+
+  <div class="limits">
+    <h3>What is not claimed here</h3>
+    <ul>
+      <li>This is <b>not a foundation model</b> and never was — the README opens by saying so, in bold.</li>
+      <li>No benchmarks versus GPT-2 or anything else; comparing a 1.7M-token diet to 10B-token runs would be theater.</li>
+      <li><code>distributed.py</code> (DDP/FSDP) is single-process-validated scaffolding, not exercised multi-GPU training.</li>
+      <li>The NeuroTopo phase report (Aug 12) is architecture research with a STOP-before-implementation gate. Research lane, not shipped — no code pretends otherwise.</li>
+      <li>Heavy AI-tool assistance during rapid phases — disclosed per repo convention; tests are the arbiter of what stands.</li>
+    </ul>
+  </div>
+
+  <h2><span class="num">06</span>Lessons I keep from it</h2>
+  <ul>
+    <li>A number without its method is a vibe. (Every metric above names its script or doc.)</li>
+    <li>Shape-tests prove plumbing; only reference-math tests prove semantics. My suite learned both.</li>
+    <li>Resume-training continuity is the cheapest deep bug-finder there is.</li>
+    <li>Publicly documenting your own 49 failures buys more trust than any polished success story.</li>
+  </ul>
+</Case>

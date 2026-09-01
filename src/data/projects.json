@@ -1,0 +1,74 @@
+{
+  "featured": [
+    {
+      "slug": "xr",
+      "num": "01",
+      "name": "xr",
+      "oneLine": "A local-first AI agent runtime that cannot overspend its budget or hide its actions.",
+      "stack": ["TypeScript", "Bun", "SQLite", "MCP"],
+      "repo": "https://github.com/ahmadrrrtx/xr",
+      "demo": "https://xr-gules.vercel.app/",
+      "npm": "@rrrtx/xr",
+      "kind": "RUNTIME",
+      "evidenceIds": ["x.cost-tested", "x.governor", "x.agent-loop", "x.npm", "x.ci", "x.demo", "x.disclosed"],
+      "metrics": [
+        { "label": "commits on main", "value": "721" },
+        { "label": "merged PRs", "value": "65" },
+        { "label": "CI workflows", "value": "7" },
+        { "label": "stars", "value": "5" }
+      ]
+    },
+    {
+      "slug": "xr-foundation-model",
+      "num": "02",
+      "name": "xr-foundation-model",
+      "oneLine": "A tiny GPT grown from zero — tokenizer, training loop, math proofs — and then audited by me, in public.",
+      "stack": ["Python", "PyTorch", "pytest", "CUDA-ready"],
+      "repo": "https://github.com/ahmadrrrtx/xr-foundation-model",
+      "kind": "RESEARCH",
+      "evidenceIds": ["f.audit", "f.ground-truth", "f.ppl", "f.tokenizer", "f.ckpt", "f.resume"],
+      "metrics": [
+        { "label": "audit findings closed", "value": "49" },
+        { "label": "test files", "value": "33" },
+        { "label": "val perplexity", "value": "301.55" },
+        { "label": "corpus", "value": "1.77M tok" }
+      ]
+    }
+  ],
+  "supporting": [
+    {
+      "slug": "gemma-monitor",
+      "num": "03",
+      "name": "Gemma Monitor",
+      "oneLine": "Local-LLM news intelligence running in production for $7.40/month — the paid API bill it replaced was $22.",
+      "stack": ["Python", "Ollama", "feedparser", "cron"],
+      "repo": "https://github.com/ahmadrrrtx/Gemma-4-RSS-Intelligence-Monitor",
+      "kind": "AUTOMATION",
+      "evidenceIds": ["g.cost", "g.prompt", "g.article"],
+      "metrics": [{ "label": "cost vs API baseline", "value": "−66%" }, { "label": "stars", "value": "4" }]
+    },
+    {
+      "slug": "civicshield",
+      "num": "04",
+      "name": "CivicShield AI",
+      "oneLine": "A civic assistant that would rather refuse than hallucinate: retrieval before generation, fail-closed.",
+      "stack": ["Next.js 15", "Prisma", "PostgreSQL", "Groq", "Zod"],
+      "repo": "https://github.com/ahmadrrrtx/CivicShield-ai",
+      "kind": "APPLICATION",
+      "evidenceIds": ["c.failclosed", "c.tests", "c.docs"],
+      "metrics": [{ "label": "mermaid diagrams", "value": "5" }, { "label": "test suites", "value": "2" }]
+    },
+    {
+      "slug": "commit-canvas",
+      "num": "05",
+      "name": "commit-canvas",
+      "oneLine": "Turn any git repository into an animated, shareable story page. Zero cost, zero auth, one command.",
+      "stack": ["Python", "HTML/JS", "GitHub Actions"],
+      "repo": "https://github.com/ahmadrrrtx/commit-canvas",
+      "demo": "https://ahmadrrrtx.github.io/commit-canvas/",
+      "kind": "DEV TOOL",
+      "evidenceIds": ["m.pkg", "m.demo"],
+      "metrics": [{ "label": "network requests", "value": "0" }]
+    }
+  ]
+}

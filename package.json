@@ -1,0 +1,29 @@
+{
+  "name": "ahmad-console",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "feed": "node scripts/fetch-feed.mjs",
+    "verify": "node scripts/verify-evidence.mjs",
+    "check-data": "node scripts/check-data.mjs",
+    "prebuild": "npm run check-data",
+    "build": "astro build",
+    "postbuild": "node scripts/build-chat-index.mjs",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/martian-mono": "^5.3.0",
+    "astro": "^5.18.2",
+    "js-yaml": "^5.4.1",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

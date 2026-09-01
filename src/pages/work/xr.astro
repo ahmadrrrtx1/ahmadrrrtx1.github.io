@@ -1,0 +1,119 @@
+---
+import Case from "../../layouts/case.astro";
+import Ledger from "../../components/ledger.astro";
+import CodeFig from "../../components/codefig.astro";
+import DiagramTrust from "../../components/DiagramTrust.astro";
+import { evidenceFor } from "../../lib/site";
+
+const testExcerpt = `/**
+ * XR — Cost Governor tests. The headline guarantee: the agent CANNOT
+ * exceed the ceiling, enforced in deterministic code.
+ */
+test("governor blocks the next step before exceeding the token ceiling", () => {
+  const g = new CostGovernor({ maxTokens: 1000 }, ...);
+  g.record(400, 100); // 500 used
+  expect(g.checkBeforeStep().allow).toBe(true);
+  g.record(400, 100); // now 1000 used
+  expect(g.checkBeforeStep().allow).toBe(false); // at ceiling
+});
+
+test("AGENT LOOP: a tiny token ceiling stops the run (the headline
+guarantee)", async () => {
+  // Provider that always wants to keep going…
+  // …loop is asserted to stop. The budget wins over the model.`;
+const govExcerpt = `export type GovernorDecision =
+  | { allow: true; warning?: string }
+  | { allow: false; reason: string; snapshot: CostSnapshot; suggestLocal?: boolean };
+
+export interface Budget {
+  /** Hard ceiling in USD for this task (0 or undefined = no $ cap). */
+  maxUsd?: number;
+  /** Hard ceiling in total tokens for this task. */
+  maxTokens?: number;
+}`;
+const jsonld = { "@context": "https://schema.org", "@type": "SoftwareSourceCode", name: "xr — local-first AI agent runtime", codeRepository: "https://github.com/ahmadrrrtx/xr", programmingLanguage: "TypeScript", license: "https://spdx.org/licenses/MIT.html", dateCreated: "2026-06-03", keywords: "ai agent, byok, cost governance, mcp, local-first" };
+---
+<Case
+  name="xr" kind="RUNTIME" period="2026-06 → ongoing" roles="solo — architecture, implementation, review, release"
+  oneLine="A local-first AI agent runtime that cannot overspend its budget or hide its actions: BYOK, hard spend ceilings, approval-gated effects, and a hash-chained log you can verify offline."
+  stack={["TypeScript", "Bun", "SQLite", "MCP", "Playwright (optional)"]}
+  repo="https://github.com/ahmadrrrtx/xr" demo="https://xr-gules.vercel.app/"
+  evidenceIds={["x.cost-tested", "x.governor", "x.agent-loop", "x.npm", "x.ci", "x.demo", "x.disclosed"]}
+  next={["/work/xr-foundation-model", "xr-foundation-model"]}
+  jsonld={jsonld}
+>
+  <h2><span class="num">01</span>What this is, in one paragraph</h2>
+  <p>xr is an agentic runtime for people who are tired of agents that act like they own your
+  credit card. You give it a task; it plans, calls tools, and changes real things on your machine —
+  <em>under</em> a policy gate, your approval for risky actions, a hard budget ceiling, and a
+  tamper-evident log of everything it did. BYOK and local-first: your keys, optionally a local model,
+  no middleman account.</p>
+
+  <h2><span class="num">02</span>The problem I actually built for</h2>
+  <p>In 2026 every demo agent is a loop calling a model. The interesting engineering isn't the loop —
+  it's what bounds the loop. Most agent frameworks treat spend, egress, and approval as
+  afterthought "guardrails" bolted onto the prompt, where a persuasive model can negotiate around them.
+  I wanted the opposite: bounds enforced in deterministic TypeScript that the model can see but not
+  touch. That single design decision — <em>the budget lives outside the brain</em> — shaped every
+  module in the repo.</p>
+
+  <h2><span class="num">03</span>Architecture</h2>
+  <DiagramTrust />
+  <p>The core loop (<code>src/core/agent.ts</code>) is dependency-injected: it takes providers, tools,
+  state, and the governor as constructor arguments, which is exactly what makes the guarantees testable
+  — tests hand it a greedy fake provider and assert the run stops. Twenty-seven modules sit under
+  <code>src/</code> (cost, security, mcp, memory, plugins, providers…) and the release/version surface is
+  stamped from a single <code>release.manifest.json</code> — if any drift, CI fails. Boring on purpose.</p>
+
+  <h2><span class="num">04</span>The load-bearing decisions</h2>
+  <ul>
+    <li><b>Enforce before generate.</b> The governor's <code>checkBeforeStep()</code> runs every turn with an
+    optimistic estimate of the next call — denial is proactive, not reactive bookkeeping.</li>
+    <li><b>Typed decisions, no booleans.</b> <code>GovernorDecision</code> is a discriminated union: a denial must
+    carry a reason and a snapshot; there's no silent <code>false</code> to ignore in the UI layer.</li>
+    <li><b>Egress allowlist, default deny.</b> Network is an effect like any other; the agent doesn't get
+    "helpful" outbound calls for free.</li>
+    <li><b>MCP as a platform, not a plugin bolt-on.</b> Server and client support are first-class (the repo's
+    plugin marketplace treats MCP tools like any other skill).</li>
+    <li><b>Deliberate non-decision:</b> no LangGraph/CrewAI dependency. With the loop this small and this
+    load-bearing, owning those ~400 lines beats inheriting someone else's abstraction.</li>
+  </ul>
+
+  <h2><span class="num">05</span>The exhibit: the ceiling that can't be negotiated</h2>
+  <CodeFig file="xr/test/cost.test.ts" url="https://github.com/ahmadrrrtx/xr/blob/main/test/cost.test.ts" code={testExcerpt} caption="excerpt, trimmed — the second test is the whole thesis" />
+  <CodeFig file="xr/src/cost/governor.ts" url="https://github.com/ahmadrrrtx/xr/blob/main/src/cost/governor.ts" code={govExcerpt} />
+  <p>Three things I like about it: the boundary semantics are decided and tested (at-ceiling is denied),
+  the local-model path is priced at zero <em>explicitly</em> instead of special-cased downstream, and the
+  integration test proves the <b>loop</b> halts — not just the component.</p>
+
+  <h2><span class="num">06</span>How it's shipped, not just written</h2>
+  <p>Sixty-five PRs merged through branches, seven CI workflows (unit, cross-platform, nightly,
+  provider canaries, supply-chain, release), published to npm as
+  <a href="https://www.npmjs.com/package/@rrrtx/xr" rel="noopener"><code>@rrrtx/xr</code></a> — currently v3.x
+  — with install scripts for Linux/macOS/Windows/Termux and a documented beta feedback loop.
+  The footer of this site shows the CI status of the latest run <em>whatever it is</em>; when it's
+  broken, this sentence is the proof I'm not cherry-picking.</p>
+
+  <div class="limits">
+    <h3>What's false about the pitch — and what's just early</h3>
+    <ul>
+      <li><b>I did not hand-write 721 commits at that pace and pretend otherwise.</b> AI coding agents
+      generate much of it; I designed the contracts, reviewed the diffs, and the tests are the arbiter.
+      My skill here is orchestration with verification — that's disclosed, not hidden.</li>
+      <li>No external users yet. "Public beta" is the honest label the repo itself uses.</li>
+      <li>The audit chain is integrity tooling, not a security boundary: someone with host-key access
+      can rebuild a consistent chain. Stated in the repo, restated here.</li>
+      <li>Single-user, local-first by design — the "OS" naming is about scope of control, not a claim
+      to be a kernel.</li>
+      <li>5 stars on GitHub. Reach and rigor are different axes and I don't confuse them.</li>
+    </ul>
+  </div>
+
+  <h2><span class="num">07</span>Lessons, kept</h2>
+  <ul>
+    <li>Guarantees belong in code the model cannot edit, above the prompt.</li>
+    <li>A passing integration test is worth more than a polished README paragraph.</li>
+    <li>Ship on a registry early: versioning forces honesty about what "done" means.</li>
+    <li>One source of truth (release manifest) deleted a whole category of drift bugs.</li>
+  </ul>
+</Case>

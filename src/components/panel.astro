@@ -1,0 +1,14 @@
+---
+interface Props { cmd: string; tail?: string; id?: string; class?: string; h1?: string }
+const { cmd, tail, id, class: cls = "", h1 } = Astro.props;
+---
+<section class={`panel reveal ${cls}`} {id} aria-labelledby={`${id ?? "p"}-t`}>
+  {h1 && <h1 class="sr-only">{h1}</h1>}
+  <header>
+    <button class="prompt" type="button" data-cmd={cmd.replace(/^>\s*/, "")} aria-label={`run: ${cmd.replace(/^>\s*/, "")}`}>
+      <span class="caret" aria-hidden="true">&gt;</span><span id={`${id ?? "p"}-t`}>{cmd.replace(/^>\s*/, "")}</span>
+    </button>
+    {tail && <span class="tail">{tail}</span>}
+  </header>
+  <div class="body"><slot /></div>
+</section>

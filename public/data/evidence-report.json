@@ -1,0 +1,306 @@
+{
+  "verifiedAt": "2026-09-01T15:30:58.484Z",
+  "total": 49,
+  "pass": 46,
+  "warn": 3,
+  "fail": 0,
+  "results": [
+    {
+      "url": "https://github.com/ahmadrrrtx/xr/blob/main/test/cost.test.ts",
+      "code": 200,
+      "status": "pass",
+      "ms": 611
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr/blob/main/src/cost/governor.ts",
+      "code": 200,
+      "status": "pass",
+      "ms": 447
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr/blob/main/src/core/agent.ts",
+      "code": 200,
+      "status": "pass",
+      "ms": 484
+    },
+    {
+      "url": "https://www.npmjs.com/package/@rrrtx/xr",
+      "code": 403,
+      "status": "warn",
+      "ms": 79,
+      "note": "issuer blocks automated checks; likely fine in a browser"
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr/actions",
+      "code": 200,
+      "status": "pass",
+      "ms": 693
+    },
+    {
+      "url": "https://xr-gules.vercel.app/",
+      "code": 200,
+      "status": "pass",
+      "ms": 279
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr#readme",
+      "code": 200,
+      "status": "pass",
+      "ms": 590
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr-foundation-model/blob/main/docs/audit/FINAL_AUDIT.md",
+      "code": 429,
+      "status": "warn",
+      "ms": 34,
+      "note": "issuer blocks automated checks; likely fine in a browser"
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr-foundation-model/blob/main/tests/test_audit_verification.py",
+      "code": 200,
+      "status": "pass",
+      "ms": 471
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr-foundation-model/blob/main/tokenizer/bpe.py",
+      "code": 429,
+      "status": "warn",
+      "ms": 39,
+      "note": "issuer blocks automated checks; likely fine in a browser"
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr-foundation-model/tree/main/checkpoints",
+      "code": 200,
+      "status": "pass",
+      "ms": 392
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr-foundation-model/blob/main/training/loop.py",
+      "code": 200,
+      "status": "pass",
+      "ms": 555
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/Gemma-4-RSS-Intelligence-Monitor#readme",
+      "code": 200,
+      "status": "pass",
+      "ms": 710
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/Gemma-4-RSS-Intelligence-Monitor/blob/main/monitor.py",
+      "code": 200,
+      "status": "pass",
+      "ms": 425
+    },
+    {
+      "url": "https://dev.to/ahmad_rrrtx/i-ran-gemma-4-on-a-7month-server-and-built-an-ai-powered-news-monitor-that-costs-0-to-operate-5gn0",
+      "code": 200,
+      "status": "pass",
+      "ms": 77
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/CivicShield-ai/blob/main/src/lib/ai/prompts.ts",
+      "code": 200,
+      "status": "pass",
+      "ms": 466
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/CivicShield-ai/blob/main/tests/run.ts",
+      "code": 200,
+      "status": "pass",
+      "ms": 321
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/CivicShield-ai#readme",
+      "code": 200,
+      "status": "pass",
+      "ms": 627
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/commit-canvas#readme",
+      "code": 200,
+      "status": "pass",
+      "ms": 1251
+    },
+    {
+      "url": "https://ahmadrrrtx.github.io/commit-canvas/",
+      "code": 200,
+      "status": "pass",
+      "ms": 157
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr",
+      "code": 200,
+      "status": "pass",
+      "ms": 34
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/xr-foundation-model",
+      "code": 200,
+      "status": "pass",
+      "ms": 604
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/Gemma-4-RSS-Intelligence-Monitor",
+      "code": 200,
+      "status": "pass",
+      "ms": 516
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/CivicShield-ai",
+      "code": 200,
+      "status": "pass",
+      "ms": 37
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/commit-canvas",
+      "code": 200,
+      "status": "pass",
+      "ms": 618
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/TruthCI",
+      "code": 200,
+      "status": "pass",
+      "ms": 571
+    },
+    {
+      "url": "https://truth-ci.vercel.app/",
+      "code": 200,
+      "status": "pass",
+      "ms": 163
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/AegisRoute",
+      "code": 200,
+      "status": "pass",
+      "ms": 646
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/NovaWeather",
+      "code": 200,
+      "status": "pass",
+      "ms": 714
+    },
+    {
+      "url": "https://pm-weather-ai-full-stack-weather-ap.vercel.app",
+      "code": 200,
+      "status": "pass",
+      "ms": 152
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/rrrtx-the-lost-signal",
+      "code": 200,
+      "status": "pass",
+      "ms": 552
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/brainrot-iq",
+      "code": 200,
+      "status": "pass",
+      "ms": 638
+    },
+    {
+      "url": "https://brainrot-iq.vercel.app/",
+      "code": 200,
+      "status": "pass",
+      "ms": 206
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/shipped-standup-generator",
+      "code": 200,
+      "status": "pass",
+      "ms": 551
+    },
+    {
+      "url": "https://shipped-enterprise.netlify.app/",
+      "code": 200,
+      "status": "pass",
+      "ms": 89
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/SoulSpace",
+      "code": 200,
+      "status": "pass",
+      "ms": 523
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/hireready",
+      "code": 200,
+      "status": "pass",
+      "ms": 786
+    },
+    {
+      "url": "https://hireready1.vercel.app/",
+      "code": 200,
+      "status": "pass",
+      "ms": 322
+    },
+    {
+      "url": "https://github.com/ahmadrrrtx/rrrtx-freeverse",
+      "code": 200,
+      "status": "pass",
+      "ms": 463
+    },
+    {
+      "url": "https://dev.to/ahmad_rrrtx/the-agent-that-writes-its-own-manual-a-deep-dive-into-hermes-agents-self-improving-architecture-58h2",
+      "code": 200,
+      "status": "pass",
+      "ms": 49
+    },
+    {
+      "url": "https://dev.to/ahmad_rrrtx/shipped-i-built-an-enterprise-ai-platform-that-generates-the-illusion-of-progress-35o",
+      "code": 200,
+      "status": "pass",
+      "ms": 11
+    },
+    {
+      "url": "https://www.credly.com/badges/759f683c-8345-4468-85d7-a80dab981a90",
+      "code": 200,
+      "status": "pass",
+      "ms": 355
+    },
+    {
+      "url": "https://www.credly.com/badges/33971e08-76d6-4626-8d4e-7a528566aaa6",
+      "code": 200,
+      "status": "pass",
+      "ms": 208
+    },
+    {
+      "url": "https://www.credly.com/badges/cf946b1c-eb03-4d57-b7c4-5b7ca67fcb3c",
+      "code": 200,
+      "status": "pass",
+      "ms": 145
+    },
+    {
+      "url": "https://www.credly.com/badges/268056cc-3dcc-44bf-a15a-11da6841a8e9",
+      "code": 200,
+      "status": "pass",
+      "ms": 1220
+    },
+    {
+      "url": "https://api.accredible.com/v1/frontend/credential_website_embed_image/certificate/182490837",
+      "code": 200,
+      "status": "pass",
+      "ms": 600
+    },
+    {
+      "url": "https://www.credly.com/badges/56d99f82-6787-44c7-b811-22e825fd1bfe",
+      "code": 200,
+      "status": "pass",
+      "ms": 242
+    },
+    {
+      "url": "https://www.credly.com/badges/c988b8f6-a59d-49ef-8899-6f2742ca3d8e",
+      "code": 200,
+      "status": "pass",
+      "ms": 199
+    },
+    {
+      "url": "https://www.coursera.org/account/accomplishments/specialization/0RF4Z9109PT7",
+      "code": 200,
+      "status": "pass",
+      "ms": 363
+    }
+  ]
+}

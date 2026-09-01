@@ -1,0 +1,103 @@
+---
+import Layout from "../layouts/base.astro";
+import Panel from "../components/panel.astro";
+import Chip from "../components/chip.astro";
+import { CONTACT, HAS_RESUME, SNAP, relTime } from "../lib/site";
+---
+<Layout title="~/about — the human runtime · Muhammad Ahmad" desc="Chiniot → 2 focused hours a day → audited agent systems. How I build, why proof matters more than polish, and what's next." path="~/about">
+  <div style="max-width:880px;margin:0 auto">
+    <Panel h1="About Muhammad Ahmad — the human runtime" cmd="cat ~/about/summary.txt">
+      <div class="prose">
+        <p class="lead">I design and ship agentic AI systems with enforceable trust boundaries — and I've
+        organized my whole life around making that claim checkable. This page is the receipt for the person
+        behind the console.</p>
+
+        <h2><span class="num">01</span>Path, compressed</h2>
+        <p>I'm 18 and this is on purpose: Chiniot, Punjab; school through Intermediate in Computer Science
+        (completed 2026); university interrupted by circumstances that weren't optional, which made
+        "employable by evidence" the only viable plan. I had roughly two focused hours a day — most people
+        underestimate what 730 honest hours compounds into. The visible result: 2024–2025 doing sales and
+        client web work to pay for the attempt, April 2026 shipping my first public repos, June onward
+        building <i>xr</i>, late July a from-scratch transformer, August it all hardened into CI, releases
+        and audits. Three dated steps beat one adjective.</p>
+
+        <h2 id="how-i-build"><span class="num">02</span>How I build</h2>
+        <blockquote>I use AI coding agents the way a senior engineer does: I write the contracts, review
+        every line, and let tests decide. The <code>xr</code> history shows the pace, so I'll say it plainly —
+        much of it is orchestration, not typing. What I own: the architecture, the policy gate, the budget
+        governor, the tests that fail when the code lies, and this site's habit of showing receipts. Ask me
+        about any line and I can defend all of it, including the AI-written parts, because I read them
+        before they shipped.</blockquote>
+        <p>That's not a disclaimer; it's the actual 2026 skill, and the only version of the story that
+        survives an afternoon of clicking through commit history. I'd rather build the process where a lie
+        is detected nightly than the prose where it's merely unlikely.</p>
+
+        <h2 id="roadmap"><span class="num">03</span>What's next — live list, not a vision board</h2>
+        <ul>
+          <li><b>First external PRs (3–5 merged).</b> The one gap every audit of me has found: 65 PRs, all into my own repos. Targets: promptfoo's eval API, LangGraph, Ollama. When I ship one, this sentence dies and gets replaced with a link.</li>
+          <li><b>A real evaluation pipeline.</b> Golden datasets + LLM-as-judge scoring with significance tests — the evals muscle my portfolio should prove next, not claim next.</li>
+          <li><b>AegisRoute rebuild.</b> One-evening repos stay in /lab until they pass the same CI bar as xr. Breaking the start-fast-finish-late habit is a feature of my process, and this is where it gets proved.</li>
+        </ul>
+
+        <h2><span class="num">04</span>Context I won't pretend isn't relevant</h2>
+        <p>I run <a href={CONTACT.agency} rel="noopener">RRRTX Systems</a>, a one-person product studio
+        (custom e-commerce + AI automation) with real delivered client work — the reason I care about
+        costs, failure modes and maintenance is that a client's invoice is how I learned all three. Before
+        code, two years of sales taught me the harder half of engineering: finding out what someone
+        actually needs. The Optimized Human newsletter keeps the philosophy muscle warm; The Lost Signal
+        in /lab keeps the fiction one. Everything I ship is public, including the embarrassments —
+        a hackathon project once marketed cryptography its code didn't have; that lesson is why every
+        sentence on this domain is clickable proof.</p>
+
+        <h2><span class="num">05</span>Tools, honest fields only</h2>
+        <p>Daily: TypeScript + Bun + Neovim inside zsh (yes, checked); Python when the job's a script and
+        PyTorch when it's science; Vercel, Cloud Run, Docker, GitHub Actions; Ollama for everything that
+        should never phone home. Editor loyalty is to the test runner, not the mode line.</p>
+        {HAS_RESUME ? <p><a class="btn primary" href="/resume.pdf"><span class="caret" aria-hidden="true">&gt;</span> resume.pdf (matches this site, same claims)</a></p>
+        : <p class="meta">resume: request via email — I'd rather ship one that matches this site 1:1 than leave a stale PDF linked.</p>}
+        <p class="meta" data-nofetch>snapshot: {Object.keys(SNAP.repos).length} tracked repos · newest push {relTime(SNAP.repos.xr?.pushedAt)} · <a class="tlink" href="/contact">say hi</a></p>
+      </div>
+    </Panel>
+    <div style="margin-top:16px">
+      <Panel id="history" cmd="ls ~/work/history" tail="ledger-formatted — anything unlinked is admitted">
+        <div style="overflow-x:auto">
+          <table class="ledger">
+            <caption>work history — status → what you can click, not what I claim</caption>
+            <thead><tr><th>role · org</th><th>when</th><th>the checkable version</th><th>state</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b style="color:var(--text)">Founder &amp; lead engineer — RRRTX Systems</b><br />
+                  <span class="dim">one-person product studio: custom e-commerce, automation, AI agents for clients</span></td>
+                <td>→ present</td>
+                <td>the <a class="tlink" href={CONTACT.agency} rel="noopener">studio site itself is the artifact ↗</a> — designed, built, shipped, still serving; client repo history backs it. One client name is verified but unpublished pending their consent.</td>
+                <td><Chip status="operating" tone="ok" glyph="●" /></td>
+              </tr>
+              <tr>
+                <td><b style="color:var(--text)">Freelance developer &amp; designer</b><br />
+                  <span class="dim">web builds, dashboards, design work — Fiverr plus direct clients</span></td>
+                <td>2024 → 2026</td>
+                <td>public <a class="tlink" href="https://www.fiverr.com/ahmadrrrtx" rel="noopener">profile ↗</a>. Deliberate omission: job counts and ratings I can't independently link, I don't publish — this row is a pointer, not a boast.</td>
+                <td><Chip status="closed · strong era" glyph="·" /></td>
+              </tr>
+              <tr>
+                <td><b style="color:var(--text)">Sales — Econex</b><br />
+                  <span class="dim">short-term, pre-code</span></td>
+                <td>2024</td>
+                <td>two paying clients inside two weeks, corroborated across two portfolios. Unlinked by nature — kept because scoping humans is half of engineering and I won't sand that off the story.</td>
+                <td><Chip status="self-reported" tone="warn" glyph="◆" /></td>
+              </tr>
+              <tr>
+                <td><b style="color:var(--text)">Education — ICS (Computer Science)</b><br />
+                  <span class="dim">Superior Group of Colleges</span></td>
+                <td>completed 2026</td>
+                <td>intermediate, not a degree — said plainly in §01 above; certificates that measured something live on <a class="tlink" href="/credentials">/credentials</a>.</td>
+                <td><Chip status="no degree · never claimed" glyph="·" /></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="meta" style="margin-top:10px">rows with links are re-checked nightly by the same verifier as the claims ledger; the self-reported row stays marked forever.</p>
+      </Panel>
+    </div>
+  </div>
+</Layout>

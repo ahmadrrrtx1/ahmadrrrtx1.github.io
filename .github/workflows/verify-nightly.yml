@@ -1,0 +1,25 @@
+name: nightly evidence check
+on:
+  schedule: [cron: "17 3 * * *"]
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci --omit=dev || npm ci
+      - run: npm run verify
+      - name: fail loudly into the issue tracker if anything rotted
+        env: { GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+        run: |
+          fails=$(node -e "const r=require('./src/data/evidence-report.json');console.log(r.fail)")
+          echo "failed links: $fails"
+          if [ "$fails" -gt 0 ]; then
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "evidence rot: $fails links dead" --body "Run \`npm run verify\` output; site shows ⚠ until repaired." || true
+          fi
+      - name: commit fresh snapshot + report (keeps main's data honest)
+        run: |
+          git config user.name "verify-bot" && git config user.email "verify@localhost"
+          git add src/data public/data && git diff --cached --quiet || (git commit -m "chore(data): nightly evidence re-check" && git push || true)

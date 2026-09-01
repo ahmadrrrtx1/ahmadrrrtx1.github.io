@@ -1,0 +1,262 @@
+---
+import Layout from "../layouts/base.astro";
+import Panel from "../components/panel.astro";
+import Chip from "../components/chip.astro";
+import Ledger from "../components/ledger.astro";
+import WorldMap from "../components/WorldMap.astro";
+import TerminalDemo from "../components/TerminalDemo.astro";
+import DiagramTrust from "../components/DiagramTrust.astro";
+import projects from "../data/projects.json";
+import writing from "../data/writing.json";
+import { SNAP, REPORT, CONTACT, PROFILES, NEWSLETTER, evidenceFor, relTime, derivedStatus } from "../lib/site";
+
+const hero = projects.featured[0], hero2 = projects.featured[1];
+const now = [
+  ["2026-09", "First external open-source PRs — evaluating promptfoo's eval API while writing my own golden-dataset harness."],
+  ["2026-09", "xr: decision-boundary hardening phases merging on branches; the audit-chain spec under review."],
+  ["2026-09", "AegisRoute rebuild: same idea, xr-grade CI discipline. One-evening repos are the pattern I'm breaking."],
+];
+const sampleRows = evidenceFor(["x.cost-tested", "x.npm", "f.audit"]);
+const xrfmStatus = derivedStatus("xr-foundation-model", false, "RESEARCH");
+
+const jsonld = {
+  "@context": "https://schema.org", "@graph": [
+    { "@type": "Person", "@id": "#me", name: "Muhammad Ahmad", alternateName: "AHMAD://", jobTitle: "Agentic AI Engineer",
+      description: "Builds agentic AI systems with enforceable trust boundaries: the xr agent runtime (MIT, on npm, 2,924-pass test suite), a from-scratch transformer (xr-foundation-model), and client work through RRRTX Systems. Based in Chiniot, Pakistan; remote-first; open to remote agentic-AI engineering roles and contracts.",
+      email: `mailto:${CONTACT.email}`, url: new URL("/", Astro.site ?? Astro.url.origin).href,
+      sameAs: [CONTACT.github, CONTACT.linkedin, ...PROFILES.map((p) => p.href).filter((h) => h !== CONTACT.github)],
+      knowsAbout: ["AI agent runtimes", "LLM evaluation", "cost governance", "MCP", "transformers", "Next.js", "TypeScript", "Python"],
+      alumniOf: { "@type": "EducationalOrganization", name: "Superior Group of Colleges (ICS, Computer Science)" },
+      worksFor: { "@id": "#rrrtx" } },
+    { "@type": "Organization", "@id": "#rrrtx", name: "RRRTX Systems", url: CONTACT.agency, founder: { "@id": "#me" },
+      description: "One-person product studio: custom e-commerce, automation and AI agents for clients." },
+    { "@type": "WebSite", name: "AHMAD:// — Muhammad Ahmad", url: (Astro.site ?? Astro.url.origin).toString(),
+      description: "Portfolio built as an attestation console: every claim links to its evidence; a nightly job re-checks all of it." },
+    { "@type": "FAQPage", mainEntity: [
+      { "@type": "Question", name: "Who is Muhammad Ahmad?", acceptedAnswer: { "@type": "Answer", text: "An agentic AI engineer based in Chiniot, Pakistan. Ships the xr agent runtime and a trained from-scratch foundation model, does client work through his studio RRRTX Systems, and publishes every claim with a verifiable source. Completed ICS (Computer Science) in 2026; no degree, never claimed one." } },
+      { "@type": "Question", name: "What is xr?", acceptedAnswer: { "@type": "Answer", text: "A TypeScript/Bun agent runtime with a spend ceiling agents cannot overrun, fail-closed policy gates, and an offline-verifiable audit chain. MIT-licensed, published on npm as @rrrtx/xr, with 2,924 tests passing and a release audit that also documents its CI failures." } },
+      { "@type": "Question", name: "Is Muhammad Ahmad available for hire?", acceptedAnswer: { "@type": "Answer", text: "Yes — open to remote junior/associate agentic-AI or AI-platform engineering roles and contract work on agent systems, automation, or evaluation pipelines. Email is the fastest path; replies within a day, timezone-wise." } },
+      { "@type": "Question", name: "Does Muhammad Ahmad use AI coding agents?", acceptedAnswer: { "@type": "Answer", text: "Yes, openly: he writes the contracts, reviews every line, and lets tests decide. The full policy is stated on the site's about page under \"how I build\" — the position is that AI-assisted work is judged by the same audit bar as hand-written work." } },
+    ] },
+  ],
+};
+---
+<Layout title="Muhammad Ahmad — Agentic AI Engineer · runtimes, evals, audits" path={""}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
+  <div class="side-grid">
+    <aside>
+      <div class="panel sidenav">
+        <header><span class="prompt" style="cursor:default;color:var(--text-3)"><span class="label">navigation</span></span></header>
+        <div class="body">
+          <a href="/" aria-current="page">~/home<span class="tick" aria-hidden="true">●</span></a>
+          <a href="/work">~/work<span class="tick" aria-hidden="true">●</span></a>
+          <a href="/lab">~/lab<span class="tick" aria-hidden="true">●</span></a>
+          <a href="/writing">~/writing<span class="tick" aria-hidden="true">●</span></a>
+          <a href="/credentials">~/credentials<span class="tick" aria-hidden="true">●</span></a>
+          <a href="/about">~/about<span class="tick" aria-hidden="true">●</span></a>
+          <a href="/contact">~/contact<span class="tick" aria-hidden="true">●</span></a>
+          <span class="group">system</span>
+          <span class="meta" style="padding:2px 10px;display:grid;gap:4px">
+            <span>npm: {SNAP.npm ? `@rrrtx/xr@${SNAP.npm.latest}` : "—"}</span>
+            <span>xr CI: {SNAP.xrCi?.conclusion ?? "—"}</span>
+            <span>links: {REPORT.pass}/{REPORT.total} live</span>
+            <span>tz: UTC+5 (Karachi)</span>
+          </span>
+          <span class="group">external</span>
+          <span style="display:flex;gap:8px;padding:4px 10px">
+            <a href={CONTACT.github} rel="noopener" aria-label="GitHub" title="GitHub"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A7.98 7.98 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+            <a href={CONTACT.linkedin} rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.6 5.2H.9V15h2.7V5.2ZM.78 2.5a1.56 1.56 0 1 1 3.12 0 1.56 1.56 0 0 1-3.12 0ZM8.32 15h2.7v-5.3c0-1.42.03-2.82-.72-3.84-.74-1.02-2.03-2.04-3.98-2.04l.01 2.78s.02.05.03.07c0-.02-.02-.04-.03-.05V5.2h-.01l.01 2.61Z"/></svg></a>
+            <a href="mailto:{CONTACT.email}" aria-label="Email" title="Email"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="m1.6 3.8 6.4 5 6.4-5"/></svg></a>
+          </span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="section-gap">
+      <!-- Z1 · WHOAMI -->
+      <Panel id="whoami" cmd="whoami" tail={`fetched ${relTime(SNAP.fetchedAt)}`}>
+        <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px">
+          <div>
+            <h1 class="display caret" style="margin-bottom:14px">Muhammad Ahmad</h1>
+            <p class="sub" style="margin-bottom:10px">I build <b style="color:var(--text)">agentic AI systems with enforceable trust boundaries</b>.</p>
+            <p class="sub lead" style="max-width:56ch">Runtimes, evals and audits — spend ceilings agents can't overrun, policies that fail closed, logs you can verify offline. Everything on this site links to its proof; CI re-checks those links nightly and admits it when one rots.</p>
+            <div class="cta-row">
+              <a class="btn primary" href="/work"><span class="caret" aria-hidden="true">&gt;</span> view the work</a>
+              <a class="btn ghost" href={CONTACT.github} rel="noopener"><span class="caret" aria-hidden="true">&gt;</span> github</a>
+              <a class="btn ghost" href="/contact"><span class="caret" aria-hidden="true">&gt;</span> contact</a>
+            </div>
+            <p class="meta disclose" style="margin-top:16px"><Chip status="HOW I BUILD" glyph="◼" /> AI-assisted development, human-verified: I write the contracts, review every line, tests decide. <a class="tlink" href="/about#how-i-build">the manifesto →</a></p>
+          </div>
+          <div>
+            <WorldMap />
+            <div class="callout accent" aria-label="sample of the claims ledger" style="margin-top:18px">
+              <p class="label" style="margin-bottom:10px">claims → evidence · sample</p>
+              <Ledger rows={sampleRows} caption="full ledger: run `evidence`" />
+            </div>
+          </div>
+        </div>
+      </Panel>
+      <style>
+        @media (max-width: 1023px) { .side-grid main .panel > .body > div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; } }
+      </style>
+
+      <!-- Z2 · FEATURED -->
+      <div>
+        <p class="label" style="margin:22px 4px 10px">&gt; ls ~/featured</p>
+        <div class="cols" style="grid-template-columns:1.35fr 1fr;align-items:stretch">
+          <article class="panel card-hero reveal">
+            <div class="lane-art" aria-hidden="true" style="padding:16px;display:grid;place-items:center">
+              <img src="/img/xr-logo.png" alt="" width="458" height="382" style="max-height:190px;width:auto;filter:drop-shadow(0 6px 24px rgba(163,230,53,.14))" />
+            </div>
+            <div class="lane-body">
+              <div class="flex center between" style="gap:10px"><span class="num-watermark">01</span><Chip status="Live · active" tone="ok" glyph="●" /></div>
+              <h3>{hero.name}</h3>
+              <p class="lead" style="font-size:13px;line-height:1.6;margin-top:8px">{hero.oneLine}</p>
+              <div class="stat-row">
+                <span class="stat"><b>721</b><span>commits</span></span>
+                <span class="stat"><b>65</b><span>merged PRs</span></span>
+                <span class="stat"><b>7×</b><span>CI workflows</span></span>
+                <span class="stat"><b>v{SNAP.npm?.latest ?? "3.1.5"}</b><span>on npm</span></span>
+              </div>
+              <p class="stack-line">TypeScript <i>·</i> Bun <i>·</i> SQLite <i>·</i> MCP</p>
+              <div class="cta-row">
+                <a class="btn primary" href="/work/xr"><span class="caret" aria-hidden="true">&gt;</span> case study</a>
+                <a class="btn ghost" href={hero.repo} rel="noopener">repo</a>
+                <a class="btn ghost" href={hero.demo} rel="noopener">live demo</a>
+              </div>
+            </div>
+          </article>
+          <article class="panel card-hero reveal" style="grid-template-columns:1fr">
+            <div class="lane-body" style="padding:24px">
+              <div class="flex center between" style="gap:10px"><span class="num-watermark">02</span><Chip status={xrfmStatus.label} tone={xrfmStatus.tone} glyph={xrfmStatus.glyph} /></div>
+              <h3 style="font-size:21px">xr-foundation-model</h3>
+              <p class="lead" style="font-size:13px;line-height:1.6;margin-top:8px">{hero2.oneLine}</p>
+              <ul style="list-style:none;padding:0;margin:14px 0;display:grid;gap:6px;font-size:12.5px">
+                <li><span class="hash">✔</span> 49-finding forensic self-audit, closed 49→0</li>
+                <li><span class="hash">✔</span> val perplexity 301.55 — measured, then admitted it's small</li>
+                <li><span class="hash">✔</span> checkpoint committed to the repo as evidence (76.8 MB)</li>
+                <li><span class="hash">✔</span> 33 test files incl. ground-truth math proofs</li>
+              </ul>
+              <p class="stack-line">Python <i>·</i> PyTorch <i>·</i> from-scratch BPE <i>·</i> pytest</p>
+              <div class="cta-row">
+                <a class="btn primary" href="/work/xr-foundation-model"><span class="caret" aria-hidden="true">&gt;</span> case study</a>
+                <a class="btn ghost" href={hero2.repo} rel="noopener">repo</a>
+              </div>
+            </div>
+          </article>
+        </div>
+        <style>
+          @media (max-width:1023px){ .cols[style]{grid-template-columns:1fr !important} }
+        </style>
+        {(() => {
+          const cc = projects.supporting.find((p) => p.slug === "commit-canvas")!;
+          const st = derivedStatus("commit-canvas", true, cc.kind);
+          return (
+            <article class="panel card-hero reveal" style="margin-top:16px;grid-template-columns:1fr">
+              <div class="lane-body" style="padding:22px 24px">
+                <div class="flex center between" style="gap:12px;flex-wrap:wrap">
+                  <div class="flex center" style="gap:12px">
+                    <span class="num-watermark" style="font-size:34px">03</span>
+                    <h3 style="font-size:19px">{cc.name}</h3>
+                    <Chip status={st.label} tone={st.tone} glyph={st.glyph} />
+                  </div>
+                  <div class="cta-row" style="margin:0">
+                    <a class="btn primary" href="/work/commit-canvas"><span class="caret" aria-hidden="true">&gt;</span> case study</a>
+                    <a class="btn ghost" href={cc.repo} rel="noopener">repo</a>
+                    <a class="btn ghost" href={cc.demo} rel="noopener">live example</a>
+                  </div>
+                </div>
+                <p class="lead" style="font-size:13px;line-height:1.6;margin-top:10px;max-width:76ch">{cc.oneLine} Starred by three early users, its own Actions pipeline renders this repo's story page on every push — dogfooding included.</p>
+                <p class="stack-line" style="margin-top:8px">Python <i>·</i> HTML/JS <i>·</i> GitHub Actions <i>·</i> {cc.metrics.map((m) => `${m.value} ${m.label}`).join(", ")}</p>
+              </div>
+            </article>
+          );
+        })()}
+        <div class="panel reveal" style="margin-top:16px">
+          {projects.supporting.filter((p) => p.slug !== "commit-canvas").map((p, i) => {
+            const st = derivedStatus(p.repo.split("/").pop()!, !!p.demo, p.kind);
+            return <a class="row" href={`/work/${p.slug}`}>
+              <span class="num-watermark" style="font-size:26px">0{i + 4}</span>
+              <span class="r-body"><span class="r-title">{p.name}</span><span class="r-oneline">{p.oneLine}</span></span>
+              <span class="r-right"><Chip status={st.label} tone={st.tone} glyph={st.glyph} /><span class="arrow" aria-hidden="true">→</span></span>
+            </a>;
+          })}
+        </div>
+        <p class="meta" style="margin-top:10px;text-align:center"><a class="tlink" href="/work">&gt; view all work <span class="arrow" aria-hidden="true">→</span></a></p>
+      </div>
+
+      <!-- Z2.5 · DEMO -->
+      <Panel id="demo" cmd="demo --xr" tail="real output · every line linked to its source">
+        <p class="meta" style="margin-bottom:12px">No fake logs, no invented telemetry. This is a replay of what my own release audit and CI actually recorded — failures included, because that's the point of keeping them visible.</p>
+        <TerminalDemo watch={[
+          ...SNAP.recentCommits.slice(0, 4).map((c) => `git log -1 ${c.repo}@${c.sha}  "${(c.msg || "").slice(0, 52)}${(c.msg || "").length > 52 ? "…" : ""}"  ·  ${relTime(c.date)}`),
+          `gh run list --repo ahmadrrrtx/xr → CI ${SNAP.xrCi?.conclusion ?? "—"} · ${relTime(SNAP.xrCi?.at)}`,
+          `npm view @rrrtx/xr version → ${SNAP.npm?.latest ?? "—"} · bun test → 2924 pass / 0 fail (audited)`,
+          `node scripts/verify-evidence.mjs → ${REPORT.pass}/${REPORT.total} links live · checked ${REPORT.verifiedAt ? REPORT.verifiedAt.slice(0, 10) : "—"}`,
+        ]} />
+      </Panel>
+
+      <!-- Z3 · ACTIVITY + STATE -->
+      <div class="cols cols-3">
+        <Panel id="log" cmd="git log --oneline -5" tail={`fetched ${relTime(SNAP.fetchedAt)}`}>
+          <ol style="list-style:none;padding:0;margin:0;display:grid;gap:9px;font-size:12px">
+            {SNAP.recentCommits.map((c) => <li style="display:grid;gap:1px"><a href={c.url} rel="noopener" style="color:var(--text);border-bottom:1px solid transparent"><span class="hash">{c.sha}</span> <span style="color:var(--text-2)">{c.repo}:</span> {c.msg}</a><span class="meta">{relTime(c.date)}</span></li>)}
+          </ol>
+          <p class="meta" style="margin-top:12px"><a class="tlink" href="https://github.com/ahmadrrrtx/xr/commits/main" rel="noopener">the full history, warts and velocity ↗</a></p>
+        </Panel>
+        <Panel id="sys" cmd="system-status">
+          <table class="kv"><tbody>
+            <tr><th scope="row">role</th><td>Agentic AI Engineer</td></tr>
+            <tr><th scope="row">focus</th><td>runtimes · evals · audits</td></tr>
+            <tr><th scope="row">status</th><td><span style="color:var(--accent)">● open to work</span></td></tr>
+            <tr><th scope="row">location</th><td>Pakistan · UTC+5</td></tr>
+            <tr><th scope="row">latest</th><td>{SNAP.npm ? `@rrrtx/xr v${SNAP.npm.latest}` : "—"}</td></tr>
+            <tr><th scope="row">links checked</th><td><a href="/colophon">nightly →</a></td></tr>
+          </tbody></table>
+        </Panel>
+        <Panel id="fetch" cmd="neofetch">
+          <div class="neofetch">
+            <img src="/img/xr-avatar.png" alt="" width="512" height="449" style="width:88px;border-radius:10px;border:var(--hairline)" />
+            <table class="kv"><tbody>
+              <tr><td><b>host</b> Muhammad-Ahmad · Chiniot, PK</td></tr>
+              <tr><td><b>shells</b> zsh, bash (both real)</td></tr>
+              <tr><td><b>editor</b> neovim + AI agents — disclosed</td></tr>
+              <tr><td><b>uptime</b> 2 focused hours/day, ~7d/wk</td></tr>
+              <tr><td><b>focus</b> Agents / LLMs / Systems</td></tr>
+              <tr><td><b>claims</b> 0 unverified on this site</td></tr>
+            </tbody></table>
+          </div>
+        </Panel>
+      </div>
+
+      <!-- Z4 · NOW + WRITING -->
+      <div class="cols cols-2">
+        <Panel cmd="tail -f ~/now">
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px;font-size:12.5px">
+            {now.map(([d, t]) => <li class="flex" style="gap:10px;align-items:baseline"><span class="meta" style="flex:0 0 auto">{d}</span><span style="color:var(--text-2)">{t}</span></li>)}
+          </ul>
+          <p class="meta" style="margin-top:12px"><a class="tlink" href="/about#roadmap">the honest version of this list →</a></p>
+        </Panel>
+        <Panel cmd="man writing">
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px;font-size:12.5px">
+            {writing.articles.slice(0, 2).map((a) => <li style="display:grid;gap:2px"><a class="tlink" href={a.url} rel="noopener">{a.title}<span class="arrow" aria-hidden="true"> ↗</span></a><span class="meta">{a.proves}</span></li>)}
+          </ul>
+          <p class="meta" style="margin-top:12px"><a class="tlink" href="/writing">&gt; cat ~/writing <span class="arrow" aria-hidden="true">→</span></a></p>
+        </Panel>
+      </div>
+
+      <!-- Z5 · CONNECT -->
+      <Panel id="connect" cmd="connect">
+        <div class="flex wrap-flex center between" style="gap:16px">
+          <div style="display:grid;gap:4px;font-size:12.5px;color:var(--text-2)">
+            <span>email → <a class="tlink" href="mailto:{CONTACT.email}">{CONTACT.email}</a> <button class="chip" data-copy={CONTACT.email} type="button" style="cursor:pointer" data-glyph="⧉">copy</button></span>
+            <span>github → <a class="tlink" href={CONTACT.github} rel="noopener">github.com/ahmadrrrtx</a> · client work → <a class="tlink" href={CONTACT.agency} rel="noopener">rrrtx-systems.com</a></span>
+            <span>writing → <a class="tlink" href={NEWSLETTER} rel="noopener">ahmadrrrtx.substack.com ↗</a> — newsletter, occasional engineering notes, unsubscribe anytime</span>
+            <span class="meta">also on {PROFILES.filter((p) => p.label !== "github").map((p) => <>· <a class="tlink" href={p.href} rel="noopener">{p.label} ↗</a></>)} </span>
+          </div>
+          <a class="btn primary" href="/contact"><span class="caret" aria-hidden="true">&gt;</span> open a conversation</a>
+        </div>
+      </Panel>
+    </main>
+  </div>
+</Layout>

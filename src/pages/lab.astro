@@ -1,0 +1,36 @@
+---
+import Layout from "../layouts/base.astro";
+import Panel from "../components/panel.astro";
+import Chip from "../components/chip.astro";
+import lab from "../data/lab.json";
+function tone(s: string) {
+  if (["LIVE"].includes(s)) return { t: "ok", g: "●" };
+  if (["SKELETON", "PROTOTYPE"].includes(s)) return { t: "warn", g: "◔" };
+  if (["SATIRE", "QUIET"].includes(s)) return { t: "cyan", g: "◐" };
+  return { t: "", g: "○" };
+}
+---
+<Layout title="~/lab — nine honest experiments · Muhammad Ahmad" desc="Side quests with real statuses: the graveyard that keeps the graveyard honest." path="~/lab">
+  <div style="max-width:1100px;margin:0 auto">
+    <Panel h1="Lab — honest experiments" cmd="ls ~/lab" tail={`${lab.entries.length} entries · statuses are what they are`}>
+      <p class="lead" style="max-width:70ch">Where range lives and hype doesn't. Every tile says its real
+      status — skeleton means skeleton — and links to source so you can audit the difference between what
+      the README brags and what the code does. One-evening projects stay here until they earn a case
+      study; that's the promotion system, and it's strict.</p>
+      <div class="lab-grid" style="margin-top:16px">
+        {lab.entries.map((l: any) => {
+          const tt = tone(l.status);
+          return <article class="panel lab-card reveal">
+            <div class="flex center between"><b style="font-size:14px">{l.name}</b><Chip status={l.status} tone={tt.t} glyph={tt.g} /></div>
+            <p>{l.blurb}</p>
+            <p class="meta" style="display:flex;gap:14px">
+              <a class="tlink" href={l.repo} rel="noopener">repo ↗</a>
+              {l.demo && <a class="tlink" href={l.demo} rel="noopener">live ↗</a>}
+              <span>{l.year}</span>
+            </p>
+          </article>;
+        })}
+      </div>
+    </Panel>
+  </div>
+</Layout>

@@ -1,0 +1,60 @@
+---
+import Case from "../../layouts/case.astro";
+import CodeFig from "../../components/codefig.astro";
+import DiagramFail from "../../components/DiagramFail.astro";
+
+const promptContract = `'You must never fabricate facts, citations, departments, dates, URLs, eligibility rules, or trace identifiers.',
+ 'You must never claim certainty when evidence is incomplete.',
+ 'Only use the verified evidence provided to you. Do not cite any source outside that evidence list.',
+ 'If verified evidence is insufficient, set grounded to false, confidence to 0.2 or lower, include the sentence "I cannot confidently verify this information." inside text, and keep citations empty.',`;
+---
+<Case
+  name="CivicShield AI" kind="APPLICATION" period="2026-06-28 → 06-29 (48h)" roles="solo — spec, build, docs, tests"
+  oneLine="A civic assistant that would rather refuse than hallucinate: retrieval-before-generation, a fail-closed evidence policy, reviewer queues, and a Known-Limitations register that became my documentation standard."
+  stack={["Next.js 15", "React 19", "Prisma", "PostgreSQL", "Better Auth", "Groq", "Zod"]}
+  repo="https://github.com/ahmadrrrtx/CivicShield-ai"
+  evidenceIds={["c.failclosed", "c.tests", "c.docs"]}
+  prev={["/work/gemma-monitor", "Gemma Monitor"]} next={["/work/commit-canvas", "commit-canvas"]}
+  jsonld={{ "@context": "https://schema.org", "@type": "SoftwareSourceCode", name: "CivicShield AI", codeRepository: "https://github.com/ahmadrrrtx/CivicShield-ai", programmingLanguage: "TypeScript" }}
+>
+  <h2><span class="num">01</span>Why civic answers deserve different engineering</h2>
+  <p>When an assistant explains a benefit program or an urgent support pathway, a confident wrong answer
+  isn't a bug report — it's someone skipping a deadline. So the product constraint came first: <b>the
+  system's default output is "I can't verify this," and every answer must earn its way past that.</b>
+  A 48-hour build, deliberately disclosed: fast because the policy was clear beforehand, not because
+  anything was skipped silently.</p>
+
+  <h2><span class="num">02</span>The flow: generation is the last step, not the first</h2>
+  <DiagramFail />
+  <p>Questions enter retrieval over official-source documents; candidates are validated against Zod
+  schemas into <code>VerifiedEvidenceItem</code>s; the model may only see that list, must answer in a typed
+  JSON contract with per-citation traceIds, and its output is refused if it cites anything outside the
+  evidence set. Low-confidence fallback isn't UI sugar — it's the policy's observable surface.</p>
+
+  <CodeFig file="CivicShield-ai/src/lib/ai/prompts.ts" url="https://github.com/ahmadrrrtx/CivicShield-ai/blob/main/src/lib/ai/prompts.ts" code={promptContract} caption="the refusal contract as actually shipped in the system prompt" />
+
+  <h2><span class="num">03</span>What's real under the hood</h2>
+  <ul>
+    <li>Typed provider registry (<code>src/lib/ai/providers/</code>) with fallback — Groq wired as primary, and
+    the abstraction is the reason a second provider is a config change.</li>
+    <li>Conversation state in a single honest 22.8 KB module rather than a framework of interfaces about an interface.</li>
+    <li>Policy + retrieval test suites behind a zero-dependency runner (<code>tests/run.ts</code>) — pass/fail in CI terms, not vibes.</li>
+    <li>Rate limiting on chat, encrypted provider-key storage, security headers; reviewer queue + audit trail for refused queries.</li>
+    <li>Five Mermaid architecture diagrams in the README — the same files this site's diagram lane restyles.</li>
+  </ul>
+
+  <div class="limits">
+    <h3>Known limitations — the section that started as an apology and became the standard</h3>
+    <ul>
+      <li>Better Auth is wired but email verification / OAuth are not enabled. MVP honesty, documented.</li>
+      <li>One active AI provider; the registry's fallback path is tested in isolation, not in traffic.</li>
+      <li>No live deployment — the case study says so instead of shipping a 502 button. Retrieval quality is benchmarked on a seeded corpus, not the open web.</li>
+      <li>Built in 48 hours with heavy AI-tool assist; what I own is the policy design and every reviewed line.</li>
+    </ul>
+  </div>
+
+  <h2><span class="num">04</span>Aftermath</h2>
+  <p>The Known-Limitations section here became a rule for every repo I touch, including this site's
+  own verifier: <em>if the docs admit the weak parts first, readers trust the strong parts too.</em>
+  That's also why the ledger above this essay lists six claims and not forty adjectives.</p>
+</Case>

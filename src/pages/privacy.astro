@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/base.astro";
+import Panel from "../components/panel.astro";
+---
+<Layout title="~/privacy — what this site does with your data: almost nothing · Muhammad Ahmad" desc="No analytics, no ads, no third-party scripts, no cookies. What the site stores and why, stated exactly." path="~/privacy">
+  <div style="max-width:760px;margin:0 auto">
+    <Panel h1="Privacy — stated exactly, not legally" cmd="cat ~/legal/privacy.txt">
+      <div class="prose">
+        <p class="lead">The shortest honest summary: this site is static HTML from a build pipeline. There is no account system, no
+        analytics, no advertising, no third-party scripts, no fonts from a CDN, and no server-side code that could watch you
+        read it. If a policy on the internet needs a paragraph to explain its tracking, it has too much tracking.</p>
+
+        <h2>What is stored about you</h2>
+        <ul>
+          <li><b>Nothing on our side.</b> No database. The only records this domain ever emits are the standard access logs
+          the hosting provider keeps for security (IP, user-agent, timestamp, requested path) — the same as any website
+          request, kept by the infrastructure, not by me, and not visible to me in normal operation.</li>
+          <li><b>On your device:</b> four small preferences plus a search-index cache, all listed with purposes on the
+          <a class="tlink" href="/cookies">cookies &amp; local storage page</a>. All of it is strictly functional, local, and deletable by you at any second.</li>
+        </ul>
+
+        <h2>When you contact me</h2>
+        <p>The contact flow is a <code>mailto:</code> link or a copy of the address — nothing is submitted "through the site."
+        When you email me, your mail provider and I see what you chose to write. I use it solely to reply, don't forward it
+        anywhere, and delete it on request if you'd rather it not exist.</p>
+
+        <h2>Links out</h2>
+        <p>Every claim links outward — GitHub, npm, deployments, certificates. The moment you click, the destination sees
+        a visit from your browser under <em>its</em> policy, not mine. That exposure is deliberate: the alternative was
+        screenshots, which lie better.</p>
+
+        <h2>The nightly verifier, explained</h2>
+        <p>A scheduled GitHub Actions job re-requests every public evidence URL on this site and commits the pass/fail
+        report. It sends nothing about you — it runs from CI against public pages, on a schedule, forever. That's how the
+        footer can carry a live pass/fail count without it being marketing.</p>
+
+        <h2>Your rights, plainly</h2>
+        <p>Ask me via the contact page for anything I hold about you (realistically: your email thread) and I'll export or
+        delete it. GDPR/CCPA-style objections you'd normally raise are answered here in advance because the collection that
+        triggers them doesn't happen.</p>
+
+        <p class="meta">Last revised: 2026-09-01 · this page is versioned in the site's git history, so "we quietly updated our policy" isn't available to me · questions: <a class="tlink" href="/contact">/contact</a></p>
+      </div>
+    </Panel>
+  </div>
+</Layout>

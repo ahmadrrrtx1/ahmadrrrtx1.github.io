@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/base.astro";
+import Panel from "../components/panel.astro";
+---
+<Layout title="~/ask — query the site, get quotes not vibes · Muhammad Ahmad" desc="Search everything on this domain: a small extractive assistant that ranks real page content and links to the source. No LLM, no invented answers." path="~/ask" noChat>
+  <div style="max-width:820px;margin:0 auto">
+    <Panel h1="Ask about me — grounded in this site" cmd="ask" tail="extractive · no LLM">
+      <div class="ask-inline" data-ask-root>
+        <div class="panel-ask" role="region" aria-label="ask the site">
+          <div class="head"><span>ahmad@xr:~% <b>ask</b> <span class="dim">— grounded in this site · no LLM, no invented answers</span></span><span class="dim" aria-hidden="true">⏎</span></div>
+          <form id="ask-form" autocomplete="off"><input id="ask-q" type="search" placeholder="who are you? what is xr? are you hiring? where do you write?" aria-label="your question" autofocus /><button type="submit" aria-label="search">↵</button></form>
+          <div id="ask-out" aria-live="polite">
+            <p class="hint">try:
+              <button type="button" class="chipq" data-q="who are you">who are you</button>
+              <button type="button" class="chipq" data-q="what is xr">what is xr</button>
+              <button type="button" class="chipq" data-q="cost ceiling">cost ceilings</button>
+              <button type="button" class="chipq" data-q="hiring">hiring</button>
+              <button type="button" class="chipq" data-q="foundation model">foundation model</button>
+              <button type="button" class="chipq" data-q="newsletter">newsletter</button>
+              <button type="button" class="chipq" data-q="credentials">credentials</button>
+            </p>
+          </div>
+          <footer class="foot">extractive retrieval: ranked quotes from the site itself, each linked to its page · index: <span id="ask-n">loading…</span></footer>
+        </div>
+      </div>
+    </Panel>
+    <div style="margin-top:16px">
+      <Panel cmd="how-it-works">
+        <div class="prose">
+          <p class="lead" style="max-width:65ch">This is a deliberately boring architecture — because the site's rule is that every answer must be checkable:</p>
+          <ul>
+            <li><b>index at build</b> — a script walks the built HTML, splits every page into heading-scoped chunks (~180 chars each) and writes one static JSON. That's the corpus; there is nothing outside this domain to ground on.</li>
+            <li><b>retrieve at query</b> — the browser runs classic TF-IDF ranking (stopwords stripped, idf-weighted term frequency, title boost, length-normalized) over those chunks. Deterministic: same question, same order, every time.</li>
+            <li><b>answer by quoting</b> — responses are the best-matching excerpts <em>verbatim from the pages themselves</em>, each linked to its exact page + section. If the index has nothing to say, it says so.</li>
+            <li><b>no model, no server</b> — no LLM call, no third-party API, no telemetry; your question never leaves the browser.</li>
+          </ul>
+          <p class="meta">the honest trade-off: it cannot synthesize across pages or chat — ask it to "compare xr and XRFM" and it will fetch the relevant passages and let you do the comparing. That's on purpose: on this site, generation would just be a second voice that can lie.</p>
+        </div>
+      </Panel>
+    </div>
+  </div>
+</Layout>

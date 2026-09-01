@@ -1,0 +1,5 @@
+---
+interface Props { status: string; tone?: string; glyph?: string }
+const { status, tone = "", glyph = "·" } = Astro.props;
+---
+<span class={`chip ${tone}`} data-glyph={glyph}>{status}</span>

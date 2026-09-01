@@ -1,0 +1,24 @@
+---
+// xr trust plane — module names mirror the repo layout (src/core, src/cost, src/security…)
+---
+<figure class="diagram" role="img" aria-label="Architecture diagram: provider calls flow into the agent loop, then a policy gate and egress allowlist before effects; a cost governor caps the loop, state persists to SQLite, and everything is appended to a hash-chained audit log.">
+<svg viewBox="0 0 780 250" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--border-strong)"/></marker></defs>
+  <g>
+    <rect class="dg-box" x="10" y="30" width="132" height="52" rx="6"/><text class="dg-label" x="76" y="52" text-anchor="middle">providers/</text><text class="dg-sub" x="76" y="68" text-anchor="middle">BYOK · 20+ or local</text>
+    <rect class="dg-box" x="172" y="30" width="132" height="52" rx="6"/><text class="dg-label" x="238" y="52" text-anchor="middle">core/agent.ts</text><text class="dg-sub" x="238" y="68" text-anchor="middle">observe → think → act</text>
+    <rect class="dg-accent" x="334" y="30" width="132" height="52" rx="6"/><text class="dg-label" x="400" y="52" text-anchor="middle">policy gate</text><text class="dg-sub" x="400" y="68" text-anchor="middle">approval-gated tools</text>
+    <rect class="dg-box" x="496" y="30" width="132" height="52" rx="6"/><text class="dg-label" x="562" y="52" text-anchor="middle">security/</text><text class="dg-sub" x="562" y="68" text-anchor="middle">egress allowlist</text>
+    <rect class="dg-box" x="658" y="30" width="112" height="52" rx="6"/><text class="dg-label" x="714" y="52" text-anchor="middle">effects</text><text class="dg-sub" x="714" y="68" text-anchor="middle">files · net · shell</text>
+    <rect class="dg-accent" x="172" y="146" width="132" height="52" rx="6"/><text class="dg-label" x="238" y="168" text-anchor="middle">cost/ governor</text><text class="dg-sub" x="238" y="184" text-anchor="middle">hard ceilings · tested</text>
+    <rect class="dg-box" x="334" y="146" width="132" height="52" rx="6"/><text class="dg-label" x="400" y="168" text-anchor="middle">state/</text><text class="dg-sub" x="400" y="184" text-anchor="middle">SQLite · memory</text>
+    <rect class="dg-box" x="496" y="146" width="274" height="52" rx="6"/><text class="dg-label" x="633" y="168" text-anchor="middle">hash-chained audit log</text><text class="dg-sub" x="633" y="184" text-anchor="middle">verify offline · sha-256 chain</text>
+    <path class="dg-edge" d="M142 56 H166"/><path class="dg-edge" d="M304 56 H328"/><path class="dg-edge" d="M466 56 H490"/><path class="dg-edge" d="M628 56 H652"/>
+    <path class="dg-edge" d="M238 140 V88"/>
+    <path class="dg-edge" d="M304 172 H328"/>
+    <path class="dg-edge" d="M466 172 H490"/>
+    <path class="dg-edge" d="M714 88 V120 H640 V140"/>
+  </g>
+</svg>
+<figcaption class="diagram-caption">the loop can want things; it can't afford them — <span class="hash">test/cost.test.ts</span> proves the halt</figcaption>
+</figure>

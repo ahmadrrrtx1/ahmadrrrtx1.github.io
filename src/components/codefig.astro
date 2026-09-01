@@ -1,0 +1,14 @@
+---
+import { Code } from "astro/components";
+interface Props { file: string; url: string; code: string; lang?: string; caption?: string; note?: string; highlight?: number[] }
+const { file, url, code, lang = "ts", caption = "excerpt, trimmed to the load-bearing lines", note, highlight = [] } = Astro.props;
+---
+<figure class="code-fig">
+  <figcaption>
+    <span class="fname">{file}</span>
+    <span>{note ?? caption}</span>
+    <a href={url} rel="noopener" style="margin-left:auto">view on GitHub ↗</a>
+  </figcaption>
+  <Code code={code.trim()} lang={lang} theme="github-dark-dimmed" wrap={false} />
+  <noscript><pre>{code.trim()}</pre></noscript>
+</figure>

@@ -1,0 +1,20 @@
+name: build + attest
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run feed            # refresh checked-in GitHub/npm snapshot
+      - run: npm run verify           # re-check every evidence link
+      - run: npm run build            # prebuild = check-data: no claim without evidence, copy lint
+      - run: |
+          # budget gate: console island must stay tiny (strategy §15.2)
+          sz=$(du -sb dist/_astro/*.js 2>/dev/null | awk '{s+=$1} END {print s+0}')
+          echo "JS bytes (uncompressed): $sz"
+          test "$sz" -lt 220000 || { echo "✘ JS budget blown — palette is supposed to be vanilla"; exit 1; }

@@ -1,0 +1,72 @@
+{
+  "entries": [
+    {
+      "name": "RRRTX FreeVerse",
+      "year": "2026",
+      "status": "IDLE",
+      "repo": "https://github.com/ahmadrrrtx/rrrtx-freeverse",
+      "blurb": "Free quiz-based certificates with QR-verifiable PDFs and a public registry repo. A small obsession made functional: verification as a default, not a paywall."
+    },
+    {
+      "name": "TruthCI",
+      "year": "2026",
+      "status": "SKELETON",
+      "repo": "https://github.com/ahmadrrrtx/TruthCI",
+      "demo": "https://truth-ci.vercel.app/",
+      "blurb": "Detects contradictions between a product's website, pricing, docs and API behavior. Deterministic diffing first; AI only explains. Landing + auth flow live; engine honestly unbuilt."
+    },
+    {
+      "name": "AegisRoute",
+      "year": "2026",
+      "status": "PROTOTYPE",
+      "repo": "https://github.com/ahmadrrrtx/AegisRoute",
+      "blurb": "Offline-first notification routing: decide what interrupts you, and be able to prove why. Built in one evening as a full README package — the badge claims are mine to defend, so the source is the receipt. Rebuild with xr-grade CI is on the list."
+    },
+    {
+      "name": "NovaWeather",
+      "year": "2026",
+      "status": "LIVE",
+      "repo": "https://github.com/ahmadrrrtx/NovaWeather",
+      "demo": "https://pm-weather-ai-full-stack-weather-ap.vercel.app",
+      "blurb": "Cinematic mission-control weather app on WebGL Earth, built entirely on free open data. Grew out of a job-assessment submission and got rebuilt properly."
+    },
+    {
+      "name": "The Lost Signal",
+      "year": "2026",
+      "status": "QUIET",
+      "repo": "https://github.com/ahmadrrrtx/rrrtx-the-lost-signal",
+      "blurb": "An interactive fiction game — prose, ambient audio, JSON-defined souls. Written, not generated. Proof that the runtime needs a human side."
+    },
+    {
+      "name": "brainrot-iq",
+      "year": "2026",
+      "status": "LIVE",
+      "repo": "https://github.com/ahmadrrrtx/brainrot-iq",
+      "demo": "https://brainrot-iq.vercel.app/",
+      "blurb": "Daily AI-generated internet-culture quiz with leaderboard and share cards. The engineering bit: Groq generates the questions, a curated fallback bank guarantees the app never breaks on an API outage."
+    },
+    {
+      "name": "SHIPPED™",
+      "year": "2026",
+      "status": "SATIRE",
+      "repo": "https://github.com/ahmadrrrtx/shipped-standup-generator",
+      "demo": "https://shipped-enterprise.netlify.app/",
+      "blurb": "An enterprise standup generator that produces the illusion of progress. Deliberately contains no AI — that's the joke. Dev.to April Fools entry; the writing is all mine, the scaffold was bot-drafted, which the repo history happily shows."
+    },
+    {
+      "name": "SoulSpace",
+      "year": "2026",
+      "status": "SHELVED",
+      "repo": "https://github.com/ahmadrrrtx/SoulSpace",
+      "blurb": "Anonymous peer-support chat: ephemeral by design, no persisted logs, and a crisis-resources disclaimer before anything else. Right instincts for a build I'd now harden differently."
+    },
+    {
+      "name": "HireReady",
+      "year": "2026",
+      "status": "LIVE",
+      "repo": "https://github.com/ahmadrrrtx/hireready",
+      "demo": "https://hireready1.vercel.app/",
+      "blurb": "Role-specific portfolio project ideas from a one-line goal, with a mind-map roadmap viewer. Built in a day for job-hunting freelancers, myself included."
+    }
+  ]
+}

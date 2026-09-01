@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/base.astro";
+import Panel from "../components/panel.astro";
+import Chip from "../components/chip.astro";
+import writing from "../data/writing.json";
+---
+<Layout title="~/writing — articles that prove how I think · Muhammad Ahmad" desc="Three published articles: measured benchmarks, architecture analysis of someone else's system, and satire. Each one proves a different muscle." path="~/writing">
+  <div style="max-width:880px;margin:0 auto">
+    <Panel h1="Writing — three articles" cmd="cat ~/writing" tail="small list, no filler">
+      <p class="lead" style="max-width:70ch">Three articles, not thirty. Each links to the code it
+      depends on, because writing without receipts is just content. More are scheduled around the
+      case studies on this site — the cadence I actually keep, stated honestly: <i>one substantial
+      piece per month, each anchored to shipped code.</i></p>
+      <div style="margin-top:16px">
+        {writing.articles.map((a) => <a class="row" href={a.url} rel="noopener">
+          <span class="meta" style="min-width:74px">{a.date}</span>
+          <span class="r-body"><span class="r-title">{a.title}</span><span class="r-oneline">{a.proves}</span></span>
+          <span class="r-right"><span class="chip">{a.reads}</span><span class="arrow" aria-hidden="true">↗</span></span>
+        </a>)}
+      </div>
+      <div class="callout" style="margin-top:16px">
+        <p class="label" style="margin-bottom:8px">the longer, weirder shelf</p>
+        {writing.other.map((o) => <p style="font-size:12.5px;color:var(--text-2);margin:6px 0"><a class="tlink" href={o.url} rel="noopener">{o.name}</a> — {o.note}</p>)}
+      </div>
+    </Panel>
+  </div>
+</Layout>

@@ -1,0 +1,267 @@
+{
+  "$comment": "Single source of truth for the palette + prompt shell (strategy \u00a710). Every entry resolves to a real route, a real link, or a real read-only action \u2014 the registry contains no decorative verbs.",
+  "entries": [
+    {
+      "id": "whoami",
+      "verb": "whoami",
+      "hint": "",
+      "group": "identity",
+      "desc": "the ten-second answer: who you're looking at",
+      "kind": "nav",
+      "target": "#whoami"
+    },
+    {
+      "id": "ls",
+      "verb": "ls",
+      "hint": "",
+      "group": "navigate",
+      "desc": "list everything: work, lab, writing",
+      "kind": "nav",
+      "target": "/work"
+    },
+    {
+      "id": "ls-work",
+      "verb": "ls ~/work",
+      "hint": "",
+      "group": "navigate",
+      "desc": "five case studies, ranked, each with an evidence ledger",
+      "kind": "nav",
+      "target": "/work"
+    },
+    {
+      "id": "ls-lab",
+      "verb": "ls ~/lab",
+      "hint": "",
+      "group": "navigate",
+      "desc": "nine honest experiments with real statuses",
+      "kind": "nav",
+      "target": "/lab"
+    },
+    {
+      "id": "cd-xr",
+      "verb": "cd work/xr",
+      "hint": "",
+      "group": "navigate",
+      "desc": "open the xr case study",
+      "kind": "nav",
+      "target": "/work/xr"
+    },
+    {
+      "id": "cd-xrfm",
+      "verb": "cd work/xr-foundation-model",
+      "hint": "",
+      "group": "navigate",
+      "desc": "open the XRFM case study",
+      "kind": "nav",
+      "target": "/work/xr-foundation-model"
+    },
+    {
+      "id": "cd-gemma",
+      "verb": "cd work/gemma-monitor",
+      "hint": "",
+      "group": "navigate",
+      "desc": "the $7.40/month news radar",
+      "kind": "nav",
+      "target": "/work/gemma-monitor"
+    },
+    {
+      "id": "cd-civic",
+      "verb": "cd work/civicshield",
+      "hint": "",
+      "group": "navigate",
+      "desc": "the fail-closed civic assistant",
+      "kind": "nav",
+      "target": "/work/civicshield"
+    },
+    {
+      "id": "cd-canvas",
+      "verb": "cd work/commit-canvas",
+      "hint": "",
+      "group": "navigate",
+      "desc": "git repo \u2192 shareable animated story page",
+      "kind": "nav",
+      "target": "/work/commit-canvas"
+    },
+    {
+      "id": "cat-about",
+      "verb": "cat ~/about/summary.txt",
+      "hint": "",
+      "group": "read",
+      "desc": "the short version of the human",
+      "kind": "nav",
+      "target": "/about"
+    },
+    {
+      "id": "ask",
+      "verb": "ask",
+      "hint": "[question]",
+      "group": "read",
+      "desc": "query the site \u2014 grounded, extractive answers",
+      "kind": "nav",
+      "target": "/ask"
+    },
+    {
+      "id": "evidence",
+      "verb": "evidence",
+      "hint": "[id]",
+      "group": "trust",
+      "desc": "print the claims ledger \u2014 every row links to proof",
+      "kind": "ledger",
+      "target": ""
+    },
+    {
+      "id": "commits",
+      "verb": "commits",
+      "hint": "[n]",
+      "group": "activity",
+      "desc": "the real git log, last six, fetched at build",
+      "kind": "commits",
+      "target": ""
+    },
+    {
+      "id": "verify",
+      "verb": "verify",
+      "hint": "",
+      "group": "trust",
+      "desc": "last nightly check of every link on this site",
+      "kind": "verify",
+      "target": ""
+    },
+    {
+      "id": "status",
+      "verb": "status",
+      "hint": "",
+      "group": "identity",
+      "desc": "availability, focus, timezone \u2014 facts, not vibes",
+      "kind": "status",
+      "target": ""
+    },
+    {
+      "id": "contact",
+      "verb": "contact",
+      "hint": "",
+      "group": "act",
+      "desc": "email me \u2014 copies the address, actually",
+      "kind": "contact",
+      "target": ""
+    },
+    {
+      "id": "open-github",
+      "verb": "open github",
+      "hint": "",
+      "group": "act",
+      "desc": "github.com/ahmadrrrtx \u2014 19 repos, all public",
+      "kind": "ext",
+      "target": "https://github.com/ahmadrrrtx"
+    },
+    {
+      "id": "open-repo-xr",
+      "verb": "open xr",
+      "hint": "",
+      "group": "act",
+      "desc": "the runtime's repository",
+      "kind": "ext",
+      "target": "https://github.com/ahmadrrrtx/xr"
+    },
+    {
+      "id": "open-demo-xr",
+      "verb": "open demo",
+      "hint": "",
+      "group": "act",
+      "desc": "xr's live browser dashboard",
+      "kind": "ext",
+      "target": "https://xr-gules.vercel.app/"
+    },
+    {
+      "id": "writing",
+      "verb": "cat ~/writing",
+      "hint": "",
+      "group": "read",
+      "desc": "three articles, each proving a different muscle",
+      "kind": "nav",
+      "target": "/writing"
+    },
+    {
+      "id": "credentials",
+      "verb": "ls ~/credentials",
+      "hint": "",
+      "group": "read",
+      "desc": "the short list of certs that measured something",
+      "kind": "nav",
+      "target": "/credentials"
+    },
+    {
+      "id": "demo",
+      "verb": "demo",
+      "hint": "",
+      "group": "read",
+      "desc": "session replay \u2014 real audit + CI output for xr, every line linked to its source",
+      "kind": "nav",
+      "target": "/#demo"
+    },
+    {
+      "id": "subscribe",
+      "verb": "subscribe",
+      "hint": "",
+      "group": "act",
+      "desc": "newsletter \u2014 occasional engineering notes on substack",
+      "kind": "ext",
+      "target": "https://ahmadrrrtx.substack.com/"
+    },
+    {
+      "id": "history",
+      "verb": "ls ~/work/history",
+      "hint": "",
+      "group": "read",
+      "desc": "experience, ledger-formatted \u2014 roles, dates, receipts",
+      "kind": "nav",
+      "target": "/about#history"
+    },
+    {
+      "id": "privacy",
+      "verb": "privacy",
+      "hint": "",
+      "group": "meta",
+      "desc": "what this site does with your data: almost nothing",
+      "kind": "nav",
+      "target": "/privacy"
+    },
+    {
+      "id": "cookies",
+      "verb": "cookies",
+      "hint": "",
+      "group": "meta",
+      "desc": "zero cookies \u2014 the six local keys, listed with purposes",
+      "kind": "nav",
+      "target": "/cookies"
+    },
+    {
+      "id": "theme",
+      "verb": "theme",
+      "hint": "",
+      "group": "act",
+      "desc": "invert the console",
+      "kind": "theme",
+      "target": ""
+    },
+    {
+      "id": "help",
+      "verb": "help",
+      "hint": "",
+      "group": "meta",
+      "desc": "the full command table",
+      "kind": "help",
+      "target": ""
+    },
+    {
+      "id": "clear",
+      "verb": "clear",
+      "hint": "",
+      "group": "meta",
+      "desc": "clear the output panel (not the page \u2014 you can't rm this)",
+      "kind": "clear",
+      "target": ""
+    }
+  ],
+  "epilogue": "Everything here links to evidence; if a link rots, `verify` will admit it. 12 verbs, 0 pranks. \u2014 the shell is an index, not a simulation."
+}

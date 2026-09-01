@@ -1,0 +1,35 @@
+---
+import Chip from "./chip.astro";
+import type { EvidenceEntry } from "../lib/site";
+const { rows, caption = "claims → status → evidence" } = Astro.props as { rows: EvidenceEntry[]; caption?: string };
+
+function hrefLabel(e: EvidenceEntry): string {
+  const m = e.href.match(/github\.com\/[^/]+\/([^/]+)\/(?:blob|tree)\/[^/]+\/(.+)$/);
+  if (m) return m[2];
+  if (/actions$/.test(e.href)) return ".github/workflows";
+  const u = new URL(e.href);
+  return u.hostname.replace(/^www\./, "") + (u.pathname === "/" ? "" : u.pathname.replace(/\/$/, ""));
+}
+function tone(s: string): { tone: string; glyph: string } {
+  if (["TESTED", "LIVE", "GREEN", "PASS"].includes(s)) return { tone: "ok", glyph: "✔" };
+  if (["AUDITED", "MEASURED", "PUBLISHED", "DOCUMENTED", "EVIDENCED", "DISCLOSED", "PROCTORED-EXAM", "ASSESSED", "CANDIDATE"].includes(s)) return { tone: "cyan", glyph: "◆" };
+  if (["STALE"].includes(s)) return { tone: "warn", glyph: "⚠" };
+  return { tone: "", glyph: "·" };
+}
+---
+<div style="overflow-x:auto">
+<table class="ledger">
+  <caption>{caption} — every row opens something you can check yourself</caption>
+  <thead><tr><th>claim</th><th>status</th><th>evidence</th></tr></thead>
+  <tbody>
+    {rows.map((e) => {
+      const t = tone(e.status);
+      return <tr>
+        <td class="claim">{e.claim}</td>
+        <td><Chip status={e.status} tone={t.tone} glyph={t.glyph} /></td>
+        <td class="ev"><a href={e.href} rel="noopener"><span class="fname" title={e.href}>{hrefLabel(e)}</span> ↗</a></td>
+      </tr>;
+    })}
+  </tbody>
+</table>
+</div>

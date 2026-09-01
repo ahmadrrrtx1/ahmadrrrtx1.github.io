@@ -1,0 +1,91 @@
+---
+// A session replay using only real, source-linked output — no invented telemetry.
+// Every fact below appears verbatim in xr's own docs (links under the terminal).
+const { watch = [] } = Astro.props as { watch?: string[] };
+const L = [
+  { t: "cmd", text: "bun test" },
+  { t: "out", text: "238 files · 2924 pass · 13 skip · 0 fail · 12,978 expects · 57.6 s" },
+  { t: "cmd", text: "curl -fsSL https://raw.githubusercontent.com/ahmadrrrtx/xr/main/install.sh | bash" },
+  { t: "out", text: "binary installed · @rrrtx/xr v3.1.5 · MIT · golden path 0.76 s e2e" },
+  { t: "cmd", text: "gh run view 31702859699   # cross-platform CI — as my own audit documents it" },
+  { t: "fail", text: "✘ linux / macos / windows failed at step 7 “Full unit suite”" },
+  { t: "dim", text: "  real, environment-specific failures (100 s / 93 s / 326 s) — not timeouts, not hidden" },
+  { t: "cmd", text: "cat docs/audits/XR_FINAL_RELEASE_AUDIT.md | grep -i verdict" },
+  { t: "ok", text: "✔ “No evidence of fabricated test success or vacuous coverage was found.”" },
+];
+---
+<div class="term-frame">
+  <div class="term-head">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span>ahmad@xr:~% — session replay · all output real · typed once per visit</span>
+    <button type="button" class="term-replay" id="term-replay">▸ replay</button>
+  </div>
+  <div class="term" id="term" data-demo aria-live="off">
+    {L.map((l) => <div class={`l ${l.t}`}>{l.t === "cmd" && <span class="p">$ </span>}<span data-full={l.text}>{l.text}</span></div>)}
+  </div>
+  <div class="term-sources">
+    <span>every line above, sourced:</span>
+    <a href="https://github.com/ahmadrrrtx/xr/blob/main/docs/audits/XR_FINAL_RELEASE_AUDIT.md" rel="noopener">test + CI verdicts ↗</a>
+    <a href="https://github.com/ahmadrrrtx/xr/blob/main/benchmarks/baseline/2026-08-15/audit.json" rel="noopener">baseline audit json ↗</a>
+    <a href="https://github.com/ahmadrrrtx/xr/actions" rel="noopener">live CI ↗</a>
+  </div>
+  {watch.length > 0 && (<>
+    <script type="application/json" id="watch-data" set:html={JSON.stringify(watch)} />
+    <div class="watch">
+      <span class="wl">watch <i>· repo + verifier snapshot baked at build — refreshes on every push</i></span>
+      <div class="wl-line"><span id="watch-line">{watch[0]}</span><i class="bc2"></i></div>
+    </div>
+  </>)}
+</div>
+<script>
+  (() => {
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const wEl = document.getElementById("watch-line");
+    if (wEl && !reduced) {
+      const lines = JSON.parse(document.getElementById("watch-data")!.textContent!);
+      let i = 0, visible = true, timer = 0;
+      const typeIn = (s: string) => { let c = 0; wEl.textContent = ""; const t = setInterval(() => { wEl.textContent = s.slice(0, ++c); if (c >= s.length) clearInterval(t); }, 9); };
+      const next = () => { if (visible && !document.hidden && lines.length > 1) { i = (i + 1) % lines.length; typeIn(lines[i]); } };
+      if ("IntersectionObserver" in window) new IntersectionObserver((es) => es.forEach((e) => { visible = e.isIntersecting; }), { threshold: 0.2 }).observe(wEl.closest(".watch")!);
+      timer = setInterval(next, 5200);
+      addEventListener("pagehide", () => clearInterval(timer));
+    }
+  })();
+</script>
+<script>
+  // types the command lines once on first view; ▸ replay re-runs it; all lines visible without JS / under reduced motion
+  (() => {
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const term = document.getElementById("term");
+    if (!term || !("IntersectionObserver" in window)) return;
+    const lines = [...term.querySelectorAll<HTMLElement>(".l")];
+    let busy = false;
+    function play(auto: boolean) {
+      if (busy) return;
+      busy = true;
+      if (auto && sessionStorage.getItem("xr-demo-played")) { busy = false; return; }
+      if (auto) sessionStorage.setItem("xr-demo-played", "1");
+      lines.forEach((n) => n.classList.add("pending"));
+      let i = 0;
+      const step = () => {
+        if (i >= lines.length) { term!.querySelectorAll<HTMLElement>(".pending").forEach((n) => n.classList.add("shown")); busy = false; return; }
+        const n = lines[i];
+        if (n.classList.contains("cmd")) {
+          const span = n.querySelector("[data-full]")!;
+          const full = span.getAttribute("data-full")!;
+          span.textContent = "";
+          n.classList.remove("shown"); n.classList.add("shown", "term-cursor");
+          let c = 0;
+          const t = setInterval(() => {
+            span.textContent = full.slice(0, ++c);
+            if (c >= full.length) { clearInterval(t); n.classList.remove("term-cursor"); i++; setTimeout(step, 160); }
+          }, 13);
+        } else { n.classList.add("shown"); i++; setTimeout(step, 80); }
+      };
+      step();
+    }
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { io.disconnect(); if (!reduced) play(true); } }), { threshold: 0.35 });
+    io.observe(term);
+    document.getElementById("term-replay")?.addEventListener("click", () => { if (!reduced) play(false); });
+  })();
+</script>

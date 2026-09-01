@@ -1,0 +1,56 @@
+---
+import Layout from "./base.astro";
+import Chip from "../components/chip.astro";
+import Ledger from "../components/ledger.astro";
+import { derivedStatus, relTime, evidenceFor } from "../lib/site";
+import { SNAP } from "../lib/site";
+
+interface Props {
+  name: string; repo: string; demo?: string | null; kind: string; oneLine: string;
+  period: string; roles: string; stack: string[]; statusRepo?: string; statusKind?: string;
+  prev?: [string, string]; next?: [string, string]; jsonld?: object; evidenceIds?: string[];
+}
+const p = Astro.props;
+const repoName = p.statusRepo ?? p.repo.split("/").pop()!;
+const st = derivedStatus(repoName, !!p.demo, p.statusKind ?? p.kind);
+const meta = SNAP.repos[repoName];
+---
+<Layout title={`${p.name} — case study · Muhammad Ahmad`} desc={p.oneLine} path={`~/work/${p.name}`}>
+  {p.jsonld && <script type="application/ld+json" set:html={JSON.stringify(p.jsonld)} />}
+  <article style="max-width:1240px;margin:0 auto">
+    <p class="meta" style="margin:6px 0 14px"><a class="tlink" href="/work">← ~/work</a></p>
+    <header class="panel reveal" style="padding:26px 24px;margin-bottom:16px">
+      <div class="flex wrap-flex center" style="gap:12px;margin-bottom:10px">
+        <h1 style="font:800 clamp(26px,3.4vw,40px)/1.1 var(--mono-display);letter-spacing:-.03em">{p.name}</h1>
+        <Chip status={st.label} tone={st.tone} glyph={st.glyph} />
+        <Chip status={p.kind} glyph="·" />
+      </div>
+      <p class="sub lead" style="max-width:70ch">{p.oneLine}</p>
+      <div class="flex wrap-flex" style="gap:8px 22px;margin-top:16px;font-size:11.5px;color:var(--text-3)">
+        <span>built: <b style="color:var(--text-2)">{p.period}</b></span>
+        <span>role: <b style="color:var(--text-2)">{p.roles}</b></span>
+        <span>stack: <b style="color:var(--text-2)">{p.stack.join(" · ")}</b></span>
+        {meta && <span>repo: <b style="color:var(--text-2)">{meta.stars}★ · pushed {relTime(meta.pushedAt)}</b></span>}
+      </div>
+      <div class="cta-row" style="margin-top:16px">
+        <a class="btn ghost" href={p.repo} rel="noopener"><span class="caret" aria-hidden="true">&gt;</span> repo</a>
+        {p.demo && <a class="btn ghost" href={p.demo} rel="noopener"><span class="caret" aria-hidden="true">&gt;</span> live demo</a>}
+        <a class="btn ghost" href="#ledger"><span class="caret" aria-hidden="true">&gt;</span> jump to ledger</a>
+      </div>
+    </header>
+
+    <div class="panel reveal" id="ledger" style="padding:18px 20px;margin-bottom:16px">
+      <p class="label" style="margin-bottom:10px">&gt; attest {p.name}</p>
+      <Ledger rows={evidenceFor(p.evidenceIds ?? [])} />
+    </div>
+
+    <div class="panel reveal" style="padding:clamp(18px,4vw,40px)">
+      <div class="prose"><slot /></div>
+    </div>
+
+    <nav class="flex between" style="margin-top:20px;gap:12px" aria-label="case study navigation">
+      {p.prev ? <a class="btn ghost" href={p.prev[0]}><span class="meta">← prev · </span>{p.prev[1]}</a> : <span></span>}
+      {p.next ? <a class="btn ghost" href={p.next[0]}><span class="meta">next · </span>{p.next[1]} →</a> : <span></span>}
+    </nav>
+  </article>
+</Layout>

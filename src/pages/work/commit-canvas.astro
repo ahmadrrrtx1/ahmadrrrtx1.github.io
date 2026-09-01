@@ -1,0 +1,41 @@
+---
+import Case from "../../layouts/case.astro";
+---
+<Case
+  name="commit-canvas" kind="DEV TOOL" period="2026-06-11" roles="solo — one good day of packaging discipline"
+  oneLine="Turn any git repository into an animated, shareable story page. Zero cost, zero auth, zero network requests — and the best open-source hygiene in my whole account, applied to itself."
+  stack={["Python", "HTML/CSS/JS", "GitHub Actions"]}
+  repo="https://github.com/ahmadrrrtx/commit-canvas" demo="https://ahmadrrrtx.github.io/commit-canvas/"
+  evidenceIds={["m.pkg", "m.demo"]}
+  prev={["/work/civicshield", "CivicShield"]}
+  jsonld={{ "@context": "https://schema.org", "@type": "SoftwareSourceCode", name: "commit-canvas", codeRepository: "https://github.com/ahmadrrrtx/commit-canvas", programmingLanguage: "Python" }}
+>
+  <h2><span class="num">01</span>The idea</h2>
+  <p>Git history is a story nobody tells. <code>commit-canvas</code> reads a repo, classifies its shape —
+  "The Marathon," "The Sprint," the 2 a.m. rescue arc — and renders a shareable animated page from the
+  actual log: cadence, bursts, quiet months, the human fingerprint of how software gets made. It runs
+  locally from a single command; it sends nothing anywhere.</p>
+
+  <h2><span class="num">02</span>Why it's on this site next to a runtime and a transformer</h2>
+  <p>Because of the receipts, not the pixels. The repo ships the checklist most "serious" projects skip:
+  <b>README · CHANGELOG · CONTRIBUTING · CODE_OF_CONDUCT · SECURITY.md · GitHub Pages CI workflow</b> — plus
+  a zero-dependency <code>run.sh</code> entry and a pip install path straight from git (it's not on PyPI; the
+  README says so, and so do I). For someone hiring for developer tools, that packaging discipline is the
+  loudest signal in the folder. It's also the template I retrofitted onto CivicShield's docs and this
+  site's own repo.</p>
+
+  <h2><span class="num">03</span>Demo: it told its own story</h2>
+  <p>The live page is this tool's output on this tool's repository — a five-minute dogfood with a
+  permanent artifact. If you want to judge the idea, you have one click to a rendered history it knows
+  nothing about:</p>
+  <ul><li><a href="https://ahmadrrrtx.github.io/commit-canvas/" rel="noopener">the canvas of commit-canvas itself ↗</a></li></ul>
+
+  <div class="limits">
+    <h3>Honest caveats</h3>
+    <ul>
+      <li>3 stars and ~an hour of active build time — the hygiene is the achievement, the adoption is not.</li>
+      <li>Narrative classification is heuristic taxonomy, not AI — that restraint is deliberate (deterministic core, explainable output).</li>
+      <li>Tests directory exists and is real but shallow; one test file is one test file.</li>
+    </ul>
+  </div>
+</Case>

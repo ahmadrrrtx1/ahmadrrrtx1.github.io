@@ -1,0 +1,39 @@
+---
+import Layout from "../layouts/base.astro";
+import Panel from "../components/panel.astro";
+import { CONTACT, HAS_RESUME, NEWSLETTER, PROFILES } from "../lib/site";
+---
+<Layout title="~/contact — say something specific · Muhammad Ahmad" desc="Open to remote agentic-AI engineering roles and contracts. Email is the fastest path." path="~/contact">
+  <div style="max-width:760px;margin:0 auto">
+    <Panel h1="Contact Muhammad Ahmad" cmd="connect">
+      <div class="prose">
+        <p class="lead">Open to: remote junior/associate agentic-AI or AI-platform engineering, and
+        contract work on agent systems, automation, or evaluation pipelines. I answer within a day,
+        timezone-wise, because client work trained that reflex.</p>
+        <div class="cta-row" style="margin:18px 0">
+          <a class="btn primary" href="mailto:{CONTACT.email}?subject={encodeURIComponent('from your console')}&body={encodeURIComponent('> whoami\n')}" >
+            <span class="caret" aria-hidden="true">&gt;</span> {CONTACT.email}
+          </a>
+          <button class="btn ghost" data-copy={CONTACT.email} type="button">⧉ copy address</button>
+        </div>
+        <ul>
+          <li><b>hiring?</b> tell me the failure mode you're worried about; my answer is already linked above.</li>
+          <li><b>client work?</b> <a href={CONTACT.agency} rel="noopener">rrrtx-systems.com</a> has the shop front, pricing shapes, and the calculator tooling.</li>
+          <li><b>WhatsApp/voice?</b> via email first — keeps scrapers off the number and context in writing.</li>
+        </ul>
+        <p class="meta" style="margin-top:14px">where to find me — {PROFILES.map((p, i) => <>{i > 0 && " · "}<a class="tlink" href={p.href} rel="noopener">{p.label} ↗</a></>)} — and client work at <a class="tlink" href={CONTACT.agency} rel="noopener">rrrtx-systems.com ↗</a></p>
+      </div>
+    </Panel>
+    <div style="margin-top:16px">
+    <Panel cmd="subscribe">
+      <div class="flex wrap-flex center between" style="gap:14px">
+        <div style="max-width:52ch">
+          <p style="margin:0 0 4px"><b style="color:var(--text)">Engineering notes, occasionally — the newsletter.</b></p>
+          <p class="meta" style="margin:0">What I verified this month, write-ups before they land on this site, no growth-hack cadence. Unsubscribe in one click.</p>
+        </div>
+        <a class="btn primary" href={NEWSLETTER} rel="noopener"><span class="caret" aria-hidden="true">&gt;</span> subscribe on substack</a>
+      </div>
+    </Panel>
+    </div>
+  </div>
+</Layout>

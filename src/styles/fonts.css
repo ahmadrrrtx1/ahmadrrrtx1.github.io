@@ -1,0 +1,4 @@
+/* Self-hosted latin-subset variable faces (3 files, no CDN, font-display: swap). */
+@font-face { font-family: "Martian Mono Variable"; font-style: normal; font-weight: 100 800; font-display: swap; src: url("/fonts/martian-mono-latin-wght-normal.woff2") format("woff2"); }
+@font-face { font-family: "Geist Mono Variable"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonts/geist-mono-latin-wght-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter Variable"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonts/inter-latin-wght-normal.woff2") format("woff2"); }

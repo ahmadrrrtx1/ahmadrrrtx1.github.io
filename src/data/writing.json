@@ -1,0 +1,11 @@
+{
+  "articles": [
+    { "title": "I Ran Gemma 4 on a $7/Month Server and Built an AI-Powered News Monitor That Costs $0 to Operate", "date": "2026-05-18", "url": "https://dev.to/ahmad_rrrtx/i-ran-gemma-4-on-a-7month-server-and-built-an-ai-powered-news-monitor-that-costs-0-to-operate-5gn0", "proves": "What I bring to engineering: measured cost tables, real failure handling, no hand-waving.", "reads": "12 min" },
+    { "title": "The Agent That Writes Its Own Manual: Hermes Agent's Self-Improving Architecture", "date": "2026-05-18", "url": "https://dev.to/ahmad_rrrtx/the-agent-that-writes-its-own-manual-a-deep-dive-into-hermes-agents-self-improving-architecture-58h2", "proves": "How I read someone else's system: architecture-first, framed as analysis, not authorship.", "reads": "8 min" },
+    { "title": "SHIPPED™ — I Built an Enterprise AI Platform That Generates the Illusion of Progress", "date": "2026-04-07", "url": "https://dev.to/ahmad_rrrtx/shipped-i-built-an-enterprise-ai-platform-that-generates-the-illusion-of-progress-35o", "proves": "That the industry deserves comedy as much as code review.", "reads": "3 min" }
+  ],
+  "other": [
+    { "name": "The Optimized Human", "kind": "newsletter", "url": "https://theoptimizedhuman.substack.com/", "note": "Weekly-ish essays on attention, stoicism and shipping. The other half of my brain." },
+    { "name": "RRRTX Systems blog", "kind": "agency", "url": "https://rrrtx-systems.com/", "note": "Three posts on automation ROI for small businesses — written for clients, not for clout." }
+  ]
+}

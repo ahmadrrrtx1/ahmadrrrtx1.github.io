@@ -1,0 +1,272 @@
+---
+import "../styles/fonts.css";
+import "../styles/global.css";
+import Console from "../components/console.astro";
+import { CONTACT, HAS_RESUME, PROFILES, NEWSLETTER, REPORT, SNAP, relTime } from "../lib/site";
+
+interface Props { title: string; desc?: string; noIndex?: boolean; path?: string; noChat?: boolean }
+const { title, desc = "Agentic AI systems with enforceable trust boundaries — runtimes, evals, audits, and the tests that prove them.", noIndex = false, path = "~", noChat = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const slugMatch = Astro.url.pathname.match(/\/work\/([^/]+)/);
+const ogImage = new URL(`/og/${slugMatch ? slugMatch[1] : "site"}.png`, Astro.site ?? Astro.url.origin).href;
+const staleDays = REPORT.verifiedAt ? Math.floor((Date.now() - Date.parse(REPORT.verifiedAt)) / 864e5) : 999;
+const stampTone = staleDays > 14 ? "stale" : REPORT.fail > 0 ? "err" : "";
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={desc} />
+  <link rel="canonical" href={canonical} />
+  {noIndex && <meta name="robots" content="noindex" />}
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="alternate icon" type="image/png" href="/img/xr-avatar.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="mask-icon" href="/favicon.svg" color="#A3E635" />
+  <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+  <meta name="theme-color" content="#0b0c0b" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={desc} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="alternate" type="application/rss+xml" title="Writing" href="/rss.xml" />
+  <script is:inline>
+    (() => { try { const t = localStorage.getItem("theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch {}
+      try { if (localStorage.getItem("xr-nav") === "hidden") document.documentElement.setAttribute("data-nav", "hidden"); } catch {}
+      try { if (!sessionStorage.getItem("xr-booted") && !matchMedia("(prefers-reduced-motion: reduce)").matches) { document.documentElement.setAttribute("data-boot", "1"); sessionStorage.setItem("xr-booted", "1"); } } catch {}
+      document.documentElement.classList.add("js"); })();
+  </script>
+</head>
+<body>
+  <div id="boot" aria-hidden="true">
+    <div class="boot-box">
+      <p class="l">ATTEST://CONSOLE — cold boot</p>
+      <p class="l">[ ok ] evidence spine · {REPORT.total} links · last check {REPORT.verifiedAt ? REPORT.verifiedAt.slice(0, 10) : "pending"}</p>
+      <p class="l">[ ok ] {REPORT.pass}/{REPORT.total} links live at build</p>
+      <p class="l">[ ok ] motion · reduced-motion skips this screen</p>
+      <p class="l who"><span class="pr">ahmad@xr:~%</span> <span id="boot-cmd" data-full="whoami"></span><i class="bc"></i></p>
+      <p class="name" id="boot-name"></p>
+      <p class="l go" id="boot-go"></p>
+    </div>
+  </div>
+  <canvas id="xr-rain" aria-hidden="true"></canvas>
+  <a class="skip-link" href="#content">skip to content</a>
+  <header class="chrome">
+    <a class="brand" href="/" aria-label="Muhammad Ahmad — home">AHMAD<em>://</em></a>
+    <span class="path" aria-hidden="true">ahmad@xr:{path}%</span>
+    <span class="spacer"></span>
+    <span class="led" role="status">Available for work <span class="sr-only">— open to remote roles and contracts</span></span>
+    <nav aria-label="primary">
+      <span class="navlinks">
+        <a href="/work">work</a>
+        <a href="/lab">lab</a>
+        <a href="/about">about</a>
+        {HAS_RESUME && <a href="/resume.pdf" rel="noopener">resume</a>}
+        <a href="/ask">ask</a>
+        <a href="/contact">contact</a>
+      </span>
+      <button id="nav-btn" type="button" aria-pressed="false" title="Hide navigation" aria-label="hide navigation"><svg class="nav-ico" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M1.5 8s2.6-4.5 6.5-4.5S14.5 8 14.5 8s-2.6 4.5-6.5 4.5S1.5 8 1.5 8Z"/><circle cx="8" cy="8" r="2"/><path class="ico-slash" d="M2.5 13.5 13.5 2.5"/></svg></button>
+      <button id="theme-btn" type="button" aria-pressed="false" title="Toggle light/dark theme"><span aria-hidden="true">◐</span><span class="sr-only">toggle theme</span></button>
+      <button id="palette-btn" type="button" title="Open command palette"><span class="kbd" aria-hidden="true">⌘K</span><span class="sr-only">open command palette</span></button>
+    </nav>
+  </header>
+
+  <div class="wrap" id="content" tabindex="-1">
+    <slot />
+  </div>
+
+  <footer class="footer">
+    <div class="inner">
+      <nav class="fcols" aria-label="site map">
+        <div class="fcol"><p class="label">console</p>
+          <a href="/">home</a><a href="/work">work</a><a href="/lab">lab</a><a href="/writing">writing</a>
+          <a href="/credentials">credentials</a><a href="/about">about</a><a href="/ask">ask</a><a href="/contact">contact</a>
+        </div>
+        <div class="fcol"><p class="label">proof</p>
+          <a href="/colophon">colophon</a><a href="/rss.xml">rss</a>
+          <a href="/data/evidence-report.json" rel="noopener">evidence report (json)</a>
+          <a href="/data/github-snapshot.json" rel="noopener">activity snapshot (json)</a>
+          <a href="https://github.com/ahmadrrrtx/xr/actions/workflows/ci.yml" rel="noopener">xr CI: {SNAP.xrCi ? `${SNAP.xrCi.status === "completed" ? (SNAP.xrCi.conclusion ?? "?") : SNAP.xrCi.status}` : "unknown"} · {relTime(SNAP.xrCi?.at)}</a>
+        </div>
+        <div class="fcol"><p class="label">fine print</p>
+          <a href="/privacy">privacy</a><a href="/cookies">cookies</a>
+          <a href="mailto:{CONTACT.email}">{CONTACT.email}</a>
+        </div>
+      </nav>
+      <div class="fmeta">
+        <span>© <span id="yr">2026</span> Muhammad Ahmad — built static, no trackers, see <a href="/privacy">privacy</a></span>
+        <span class="stamp {stampTone}" title="Every claim on this site links to evidence; a nightly job re-checks all of it.">
+          <span class="dot" aria-hidden="true"></span>
+          evidence verified {REPORT.verifiedAt ? REPORT.verifiedAt.slice(0, 10) : "never"} · {REPORT.pass}/{REPORT.total} links live
+          <span class="sr-only">(last check {relTime(REPORT.verifiedAt)})</span>
+        </span>
+      </div>
+      <span class="profiles">also on
+        {PROFILES.map((p) => <a href={p.href} rel="noopener" title={p.note || p.label}>{p.label}</a>)}
+        <a class="sub" href={NEWSLETTER} rel="noopener">✦ subscribe</a>
+      </span>
+    </div>
+  </footer>
+  {!noChat && (
+  <div id="xr-ask" data-ask-root>
+    <button id="ask-btn" type="button" aria-expanded="false" aria-controls="ask-panel" title="Ask about me — grounded in this site">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+        <rect x="3.5" y="6" width="13" height="10" rx="2.5" /><path d="M10 6V3.4" /><circle cx="10" cy="2.4" r="1.1" fill="currentColor" stroke="none" />
+        <circle cx="7.4" cy="11" r=".9" fill="currentColor" stroke="none" /><circle cx="12.6" cy="11" r=".9" fill="currentColor" stroke="none" /><path d="M7.4 13.6h5.2" />
+      </svg>
+      <span class="sr-only">open the ask panel — answers are quoted from this site</span>
+    </button>
+    <div id="ask-panel" class="panel-ask" role="region" aria-label="Ask about me">
+      <div class="head"><span>ahmad@xr:~% <b>ask</b> <span class="dim">— grounded in this site · no LLM, no invented answers</span></span><button type="button" id="ask-x" aria-label="close ask panel">✕</button></div>
+      <form id="ask-form" autocomplete="off"><input id="ask-q" type="search" placeholder="who are you? what is xr? are you hiring?" aria-label="your question" /><button type="submit" aria-label="search">↵</button></form>
+      <div id="ask-out" aria-live="polite">
+        <p class="hint">try:
+          <button type="button" class="chipq" data-q="who are you">who are you</button>
+          <button type="button" class="chipq" data-q="what is xr">what is xr</button>
+          <button type="button" class="chipq" data-q="cost ceiling">cost ceilings</button>
+          <button type="button" class="chipq" data-q="hiring">hiring</button>
+          <button type="button" class="chipq" data-q="foundation model">foundation model</button>
+          <button type="button" class="chipq" data-q="newsletter">newsletter</button>
+        </p>
+      </div>
+      <footer class="foot">extractive retrieval: ranked quotes from the site itself, each linked to its page · index: <span id="ask-n">loading…</span></footer>
+    </div>
+  </div>
+  )}
+  <script is:inline>
+    /* boot screen — types once per session, then dissolves; absent under reduced motion / repeat loads */
+    (() => {
+      const root = document.documentElement;
+      if (!root.hasAttribute("data-boot")) return;
+      const el = document.getElementById("boot");
+      let dead = false;
+      const kill = () => { if (dead) return; dead = true; el.classList.add("fade"); setTimeout(() => { root.removeAttribute("data-boot"); if (el.parentNode) el.parentNode.removeChild(el); }, 260); };
+      if (!el) { root.removeAttribute("data-boot"); return; }
+      setTimeout(kill, 2700);
+      const lines = [...el.querySelectorAll(".l:not([id])")];
+      lines.forEach((n, i) => setTimeout(() => n.classList.add("on"), 70 + i * 100));
+      setTimeout(() => {
+        const cmd = el.querySelector("#boot-cmd"); const full = cmd.getAttribute("data-full"); let t = 0;
+        const ct = setInterval(() => { cmd.textContent = full.slice(0, ++t); if (t >= full.length) { clearInterval(ct); name(); } }, 26);
+        function name() { const nm = el.querySelector("#boot-name"); const fn = "MUHAMMAD AHMAD"; let i = 0;
+          const nt = setInterval(() => { nm.textContent = fn.slice(0, ++i) + (i < fn.length ? "▊" : ""); if (i >= fn.length) { nm.classList.add("done"); clearInterval(nt); const go = el.querySelector("#boot-go"); go.classList.add("on"); go.textContent = "→ entering console"; setTimeout(kill, 420); } }, 36); }
+      }, 470);
+    })();
+    /* ask engine — deterministic TF-IDF over the build-time chunk index; quotes, never generates */
+    (() => {
+      const roots = [...document.querySelectorAll("[data-ask-root]")];
+      if (!roots.length) return;
+      let idx = null, pend = null;
+      const STOP = new Set("a an and are as at be but by for has have do does can could i if in is it its me my of on or so that the this to was we with you your yours".split(" "));
+      const SYNO = { accessible: ["wcag", "keyboard", "contrast"], accessibility: ["wcag", "keyboard", "contrast"], hiring: ["contract", "open"], hire: ["contract", "open"], cost: ["ceiling", "budget", "spend"], pricing: ["cost"], fast: ["performance", "budget"], slow: ["performance"], skills: ["stack", "typescript", "python"], who: ["muhammad", "ahmad"], yourself: ["muhammad", "ahmad"], truth: ["truthci", "truth-ci"], aegis: ["aegisroute"], nova: ["novaweather"], experience: ["history", "role"], resume: ["history"] };
+      const qtoks = (q) => [...new Set((q.toLowerCase().match(/[a-z0-9]{2,}/g) || []).filter((t) => !STOP.has(t)).flatMap((t) => SYNO[t] ? [t, ...SYNO[t]] : [t]))].slice(0, 10);
+      const count = (s, t) => { const m = s.match(new RegExp("\\b" + t + "\\b", "g")); return m ? m.length : 0; };
+      const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+      const load = () => {
+        if (idx) return Promise.resolve(idx);
+        if (pend) return pend;
+        try { const raw = localStorage.getItem("xr-ask-idx"); if (raw) { const c = JSON.parse(raw); if (c && c.j && c.j.chunks && Date.now() - c.at < 6 * 36e5) { idx = c.j; idx.chunks.forEach((x) => { x.L = x.x.toLowerCase(); }); roots.forEach((r) => { const n = r.querySelector("#ask-n"); if (n && !n.dataset.set) { n.textContent = idx.n + " chunks · site indexed " + idx.gen.slice(0, 10) + " · cached, instant"; n.dataset.set = "1"; } }); return Promise.resolve(idx); } } } catch {}
+        return (pend = fetch("/data/chat-index.json").then((r) => (r.ok ? r.json() : Promise.reject())).then((j) => {
+          j.chunks.forEach((c) => { c.L = c.x.toLowerCase(); }); idx = j;
+          try { const s = JSON.parse(JSON.stringify(j)); s.chunks.forEach((c) => { delete c.L; }); localStorage.setItem("xr-ask-idx", JSON.stringify({ at: Date.now(), j: s })); } catch {}
+          return idx;
+        }).catch(() => null));
+      };
+      function search(q) {
+        const ts = qtoks(q);
+        if (!ts.length || !idx) return [];
+        const cs = idx.chunks, N = cs.length, df = {};
+        for (const t of ts) { let d = 0; for (const c of cs) if (count(c.L, t)) d++; df[t] = d; }
+        const scored = [];
+        for (const c of cs) {
+          let s = 0; const meta = (c.s + " " + c.p).toLowerCase();
+          for (const t of ts) { if (!df[t]) continue; const tf = count(c.L, t); if (!tf) continue; s += Math.log(1 + (N - df[t] + 0.5) / (df[t] + 0.5)) * Math.min(1 + Math.log(tf), 3.2) * (meta.includes(t) ? 2.2 : 1); }
+          if (s > 0) scored.push({ c, s: s / (1 + 0.12 * Math.sqrt(c.L.length)) });
+        }
+        scored.sort((a, b) => b.s - a.s);
+        const out = [], seen = new Set();
+        for (const r of scored) { if (out.length >= 4) break; if (seen.has(r.c.u) && out.length >= 2) continue; seen.add(r.c.u); out.push(r); }
+        return out.filter((r) => r.s > scored[0].s * 0.12).map((r) => ({ u: r.c.u, p: r.c.p, s: r.c.s, x: r.c.x }));
+      }
+      function hl(text, q) {
+        const ts = qtoks(q).sort((a, b) => b.length - a.length);
+        let h = esc(text);
+        if (ts.length) { const re = new RegExp("(" + ts.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")) + ")", "ig"); h = h.replace(re, "<mark>$1</mark>"); }
+        return h;
+      }
+      function render(out, q, res) {
+        if (!res.length) { out.innerHTML = '<p class="meta">no matches in the site index for “' + esc(q) + '” — try broader words, or the chips above. (Answers only ever quote what is on this site.)</p>'; return; }
+        out.innerHTML = '<p class="res-meta">' + res.length + " grounded excerpt" + (res.length > 1 ? "s" : "") + " · quoted, not generated</p>" +
+          res.map((r) => '<div class="res"><a href="' + r.u + '">' + esc(r.p) + (r.s && r.s !== r.p ? " › " + esc(r.s) : "") + ' <span aria-hidden="true">↗</span></a><p>' + hl(r.x, q) + "</p></div>").join("");
+      }
+      roots.forEach((root) => {
+        const inline = root.classList.contains("ask-inline");
+        const btn = root.querySelector("#ask-btn");
+        const q = root.querySelector("#ask-q"), out = root.querySelector("#ask-out");
+        const setOpen = (v) => { root.classList.toggle("open", v); if (btn) btn.setAttribute("aria-expanded", String(v)); if (v) { q && q.focus(); load().then((j) => { const n = root.querySelector("#ask-n"); if (n && j) n.textContent = j.n + " chunks · site indexed " + j.gen.slice(0, 10); }); } };
+        btn && btn.addEventListener("click", () => setOpen(!root.classList.contains("open")));
+        root.querySelector("#ask-x") && root.querySelector("#ask-x").addEventListener("click", () => { setOpen(false); btn && btn.focus(); });
+        if (!inline) document.addEventListener("keydown", (e) => { if (e.key === "Escape" && root.classList.contains("open")) { setOpen(false); btn && btn.focus(); } });
+        const run = (v) => { out.innerHTML = '<p class="meta">querying index…</p>'; load().then((j) => { if (!j) { out.innerHTML = '<p class="meta">index unavailable — run <code>npm run build</code> to generate it.</p>'; return; } render(out, v, search(v)); }); };
+        root.querySelector("#ask-form").addEventListener("submit", (e) => { e.preventDefault(); const v = (q.value || "").trim(); if (v) run(v); });
+        root.querySelectorAll("[data-q]").forEach((b) => b.addEventListener("click", () => { q.value = b.dataset.q; run(b.dataset.q); q.focus(); }));
+        if (inline) { root.classList.add("open"); load().then((j) => { const n = root.querySelector("#ask-n"); if (n && j) n.textContent = j.n + " chunks · site indexed " + j.gen.slice(0, 10); }); }
+      });
+      // warm the index while the browser is idle — first query is then instant
+      const warm = () => load();
+      const ric = window.requestIdleCallback;
+      if (ric) ric(warm, { timeout: 4000 }); else setTimeout(warm, 1800);
+    })();
+  </script>
+  <script is:inline>
+    /* nav hide/show — plain classic script: works even if module chunks fail, on every page */
+    (() => {
+      const root = document.documentElement;
+      const paint = (hidden, store) => {
+        hidden ? root.setAttribute("data-nav", "hidden") : root.removeAttribute("data-nav");
+        const b = document.getElementById("nav-btn");
+        if (b) { b.setAttribute("aria-pressed", String(hidden)); b.title = hidden ? "Show navigation" : "Hide navigation"; }
+        if (store) { try { localStorage.setItem("xr-nav", hidden ? "hidden" : "shown"); } catch {} }
+      };
+      let hidden = false; try { hidden = localStorage.getItem("xr-nav") === "hidden"; } catch {}
+      paint(hidden, false);
+      document.addEventListener("click", (e) => {
+        const b = e.target && e.target.closest ? e.target.closest("#nav-btn") : null;
+        if (!b) return;
+        hidden = !root.hasAttribute("data-nav");
+        paint(hidden, true);
+        if (hidden) { const c = document.getElementById("content"); if (c) c.focus({ preventScroll: true }); }
+        const t = document.getElementById("toast");
+        if (t) { t.textContent = hidden ? "navigation hidden — ⌘K still works" : "navigation shown"; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 1400); }
+      });
+    })();
+    /* ambient glyph rain — decorative only: no reduced-motion, no light theme, pauses when hidden */
+    (() => {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const cv = document.getElementById("xr-rain"); if (!cv || !cv.getContext) return;
+      const ctx = cv.getContext("2d"); if (!ctx) return; const FS = 14; let W, H, cols, drops, raf = 0, last = 0;
+      const chars = "アイウエオカキクケサシス0123456789<>{}[]/\\|=+-x*#$%&";
+      const size = () => { const d = Math.min(devicePixelRatio || 1, 1.5); W = innerWidth; H = innerHeight; cv.width = W * d; cv.height = H * d; cv.style.width = W + "px"; cv.style.height = H + "px"; ctx.setTransform(d, 0, 0, d, 0, 0); cols = Math.floor(W / (FS * 1.6)); drops = Array.from({ length: cols }, () => Math.random() * -H / FS); };
+      size(); addEventListener("resize", size);
+      const tick = (ts) => { raf = requestAnimationFrame(tick); if (ts - last < 110) return; last = ts;
+        if (document.documentElement.getAttribute("data-theme") === "light") { cv.style.opacity = "0"; return; } cv.style.opacity = "";
+        ctx.fillStyle = "rgba(11,12,11,.16)"; ctx.fillRect(0, 0, W, H); ctx.font = FS + "px monospace";
+        for (let i = 0; i < cols; i++) { const y = ++drops[i] * FS; ctx.fillStyle = Math.random() < .07 ? "rgba(163,230,53,.85)" : "rgba(163,230,53,.34)"; ctx.fillText(chars[(Math.random() * chars.length) | 0], i * FS * 1.6, y); if (y > H + 40 && Math.random() > .975) drops[i] = Math.random() * -20; } };
+      const start = () => { if (!raf) { ctx.fillStyle = "#0b0c0b"; ctx.fillRect(0, 0, W, H); raf = requestAnimationFrame(tick); } };
+      const stop = () => { cancelAnimationFrame(raf); raf = 0; };
+      document.addEventListener("visibilitychange", () => document.hidden ? stop() : start()); start();
+    })();
+  </script>
+  <script is:inline>
+    (() => { if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const els = [...document.querySelectorAll(".reveal")]; if (!els.length) return;
+      if (!("IntersectionObserver" in window)) { els.forEach((el) => el.classList.add("in")); return; }
+      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { const d = +e.target.dataset.d || 0; setTimeout(() => e.target.classList.add("in"), d); io.unobserve(e.target); } }), { rootMargin: "0px 0px -6% 0px" });
+      els.forEach((el, i) => { el.dataset.d = String(Math.min(i * 40, 240)); io.observe(el); }); })();
+  </script>
+</body>
+</html>

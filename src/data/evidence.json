@@ -1,0 +1,185 @@
+{
+  "$comment": "The site's spine: every claim on the site references an id here. scripts/check-data.mjs fails the build if any claim lacks evidence or any URL is not https. Evidence URLs were live-checked on 2026-09-01.",
+  "entries": [
+    {
+      "id": "x.cost-tested",
+      "claim": "The agent loop cannot overrun a token or dollar ceiling — enforced in code and covered by tests",
+      "status": "TESTED",
+      "href": "https://github.com/ahmadrrrtx/xr/blob/main/test/cost.test.ts"
+    },
+    {
+      "id": "x.governor",
+      "claim": "Typed allow/deny decisions returned before every step",
+      "status": "SHIPPED",
+      "href": "https://github.com/ahmadrrrtx/xr/blob/main/src/cost/governor.ts"
+    },
+    {
+      "id": "x.agent-loop",
+      "claim": "Dependency-injected Observe–Think–Act loop, provider-agnostic",
+      "status": "SHIPPED",
+      "href": "https://github.com/ahmadrrrtx/xr/blob/main/src/core/agent.ts"
+    },
+    {
+      "id": "x.npm",
+      "claim": "Publicly installable from npm as @rrrtx/xr",
+      "status": "PUBLISHED",
+      "href": "https://www.npmjs.com/package/@rrrtx/xr"
+    },
+    {
+      "id": "x.ci",
+      "claim": "Seven GitHub Actions workflows guard the repo (CI, cross-platform, nightly, provider canaries, supply-chain, release)",
+      "status": "GREEN",
+      "href": "https://github.com/ahmadrrrtx/xr/actions"
+    },
+    {
+      "id": "x.demo",
+      "claim": "Browser dashboard live on Vercel",
+      "status": "LIVE",
+      "href": "https://xr-gules.vercel.app/"
+    },
+    {
+      "id": "x.disclosed",
+      "claim": "Built with heavy AI-tool assist — disclosed, not hidden; see the repo's honest beta labeling and known-limitations register",
+      "status": "DISCLOSED",
+      "href": "https://github.com/ahmadrrrtx/xr#readme"
+    },
+    {
+      "id": "f.audit",
+      "claim": "Forty-nine-finding forensic self-audit run before release; every finding closed with an evidence note",
+      "status": "AUDITED",
+      "href": "https://github.com/ahmadrrrtx/xr-foundation-model/blob/main/docs/audit/FINAL_AUDIT.md"
+    },
+    {
+      "id": "f.ground-truth",
+      "claim": "Math checked against independent references: RoPE, RMSNorm, SwiGLU exact; KV-cache equivalence ~1e-7",
+      "status": "TESTED",
+      "href": "https://github.com/ahmadrrrtx/xr-foundation-model/blob/main/tests/test_audit_verification.py"
+    },
+    {
+      "id": "f.ppl",
+      "claim": "Trained end-to-end: loss 7.66→6.45, final val perplexity 301.55 on a 1.77M-token corpus — small by design, stated in the README",
+      "status": "MEASURED",
+      "href": "https://github.com/ahmadrrrtx/xr-foundation-model/blob/main/docs/audit/FINAL_AUDIT.md"
+    },
+    {
+      "id": "f.tokenizer",
+      "claim": "Byte-level BPE tokenizer written from scratch; exact round-trip on English, Unicode and code",
+      "status": "SHIPPED",
+      "href": "https://github.com/ahmadrrrtx/xr-foundation-model/blob/main/tokenizer/bpe.py"
+    },
+    {
+      "id": "f.ckpt",
+      "claim": "The 76.8 MB trained checkpoint is committed to the repo as evidence",
+      "status": "EVIDENCED",
+      "href": "https://github.com/ahmadrrrtx/xr-foundation-model/tree/main/checkpoints"
+    },
+    {
+      "id": "f.resume",
+      "claim": "Training is resumable: step counter, LR schedule and loss continuity verified at step 120→240",
+      "status": "TESTED",
+      "href": "https://github.com/ahmadrrrtx/xr-foundation-model/blob/main/training/loop.py"
+    },
+    {
+      "id": "g.cost",
+      "claim": "Runs production news-intel for $7.40/month versus the $22/month API subscription it replaced",
+      "status": "MEASURED",
+      "href": "https://github.com/ahmadrrrtx/Gemma-4-RSS-Intelligence-Monitor#readme"
+    },
+    {
+      "id": "g.prompt",
+      "claim": "Structured INCLUDE/EXCLUDE screening prompts so the model triages instead of rambles",
+      "status": "SHIPPED",
+      "href": "https://github.com/ahmadrrrtx/Gemma-4-RSS-Intelligence-Monitor/blob/main/monitor.py"
+    },
+    {
+      "id": "g.article",
+      "claim": "Full write-up with the benchmark tables on dev.to",
+      "status": "PUBLISHED",
+      "href": "https://dev.to/ahmad_rrrtx/i-ran-gemma-4-on-a-7month-server-and-built-an-ai-powered-news-monitor-that-costs-0-to-operate-5gn0"
+    },
+    {
+      "id": "c.failclosed",
+      "claim": "Refuses to answer when verified evidence is insufficient — pinned in the model's response contract",
+      "status": "SHIPPED",
+      "href": "https://github.com/ahmadrrrtx/CivicShield-ai/blob/main/src/lib/ai/prompts.ts"
+    },
+    {
+      "id": "c.tests",
+      "claim": "Policy and retrieval test suites run through a zero-dependency custom runner",
+      "status": "TESTED",
+      "href": "https://github.com/ahmadrrrtx/CivicShield-ai/blob/main/tests/run.ts"
+    },
+    {
+      "id": "c.docs",
+      "claim": "README carries five Mermaid architecture diagrams plus a Known Limitations register",
+      "status": "DOCUMENTED",
+      "href": "https://github.com/ahmadrrrtx/CivicShield-ai#readme"
+    },
+    {
+      "id": "m.pkg",
+      "claim": "Textbook open-source packaging: README, CHANGELOG, CONTRIBUTING, SECURITY.md, CI",
+      "status": "DOCUMENTED",
+      "href": "https://github.com/ahmadrrrtx/commit-canvas#readme"
+    },
+    {
+      "id": "m.demo",
+      "claim": "Live demo generated by the tool from its own repository",
+      "status": "LIVE",
+      "href": "https://ahmadrrrtx.github.io/commit-canvas/"
+    },
+    {
+      "id": "x.release-audit",
+      "claim": "bun test: 2,924 pass / 13 skip / 0 fail · 12,978 expects · 57.6 s — and the same audit documents its CI failures verbatim",
+      "status": "AUDITED",
+      "href": "https://github.com/ahmadrrrtx/xr/blob/main/docs/audits/XR_FINAL_RELEASE_AUDIT.md"
+    },
+    {
+      "id": "x.baseline-chain",
+      "claim": "integrity baseline: empty chain verifies healthy on a fresh XR_HOME — chainValid true, generated 2026-08-15",
+      "status": "AUDITED",
+      "href": "https://github.com/ahmadrrrtx/xr/blob/main/benchmarks/baseline/2026-08-15/audit.json"
+    },
+    {
+      "id": "p.medium",
+      "claim": "Medium profile — long-form writing",
+      "status": "LIVE",
+      "href": "https://medium.com/@ahmadrrrtx333"
+    },
+    {
+      "id": "p.hashnode",
+      "claim": "Hashnode profile — technical blog",
+      "status": "LIVE",
+      "href": "https://hashnode.com/@ahmadrrrtx"
+    },
+    {
+      "id": "p.indiehackers",
+      "claim": "Indie Hackers profile — shipped-product trail",
+      "status": "LIVE",
+      "href": "https://www.indiehackers.com/ahmad_rrrtx"
+    },
+    {
+      "id": "p.dailydev",
+      "claim": "daily.dev profile (handle: ahmadrrrtx)",
+      "status": "LIVE",
+      "href": "https://daily.dev/ahmadrrrtx"
+    },
+    {
+      "id": "p.substack",
+      "claim": "Substack newsletter — engineering notes",
+      "status": "LIVE",
+      "href": "https://ahmadrrrtx.substack.com/"
+    },
+    {
+      "id": "e.rrrtx",
+      "claim": "RRRTX Systems — operating one-person product studio; site live, shipped client work",
+      "status": "LIVE",
+      "href": "https://rrrtx-systems.com/"
+    },
+    {
+      "id": "e.fiverr",
+      "claim": "Freelance history on Fiverr — profile public; job counts deliberately not published (unverifiable)",
+      "status": "SELF-REPORTED",
+      "href": "https://www.fiverr.com/ahmadrrrtx"
+    }
+  ]
+}

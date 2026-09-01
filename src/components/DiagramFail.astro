@@ -1,0 +1,21 @@
+---
+// CivicShield fail-closed flow
+---
+<figure class="diagram" role="img" aria-label="Flow diagram: a citizen question goes through evidence retrieval into a verified-evidence gate; with evidence the model answers grounded with citations; without sufficient evidence it returns a low-confidence refusal and routes the question to a reviewer queue with an audit trail.">
+<svg viewBox="0 0 780 210" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arrF" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--border-strong)"/></marker></defs>
+  <g>
+    <rect class="dg-box" x="10" y="70" width="120" height="52" rx="6"/><text class="dg-label" x="70" y="92" text-anchor="middle">question</text><text class="dg-sub" x="70" y="108" text-anchor="middle">guest or signed-in</text>
+    <rect class="dg-box" x="160" y="70" width="140" height="52" rx="6"/><text class="dg-label" x="230" y="92" text-anchor="middle">retrieval/</text><text class="dg-sub" x="230" y="108" text-anchor="middle">official sources only</text>
+    <rect class="dg-accent" x="330" y="70" width="150" height="52" rx="6"/><text class="dg-label" x="405" y="92" text-anchor="middle">evidence gate</text><text class="dg-sub" x="405" y="108" text-anchor="middle">schemas.ts validation</text>
+    <rect class="dg-box" x="510" y="14" width="130" height="52" rx="6"/><text class="dg-label" x="575" y="36" text-anchor="middle">grounded answer</text><text class="dg-sub" x="575" y="52" text-anchor="middle">+ traceable citations</text>
+    <rect class="dg-box" x="510" y="126" width="130" height="52" rx="6"/><text class="dg-label" x="575" y="148" text-anchor="middle">refusal</text><text class="dg-sub" x="575" y="164" text-anchor="middle">conf ≤ 0.2 · no citation</text>
+    <rect class="dg-box" x="670" y="70" width="100" height="52" rx="6"/><text class="dg-label" x="720" y="92" text-anchor="middle">audit</text><text class="dg-sub" x="720" y="108" text-anchor="middle">reviewer queue</text>
+    <path class="dg-edgeF" d="M130 96 H154"/><path class="dg-edgeF" d="M300 96 H324"/>
+    <path class="dg-edgeF" d="M466 82 H504" ></path><text class="dg-sub" x="470" y="76">hit</text>
+    <path class="dg-edgeF" d="M466 110 L504 146"/><text class="dg-sub" x="448" y="140">miss</text>
+    <path class="dg-edgeF" d="M640 40 H700 V64"/><path class="dg-edgeF" d="M640 152 H700 V128"/>
+  </g>
+</svg>
+<figcaption class="diagram-caption">wrong answers about benefits hurt people — refusing is the feature, not the failure</figcaption>
+</figure>

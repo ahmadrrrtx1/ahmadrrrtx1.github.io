@@ -1,0 +1,70 @@
+---
+// Dot-matrix world map, computed at build: each dot is a grid point (64 cols × 24 rows,
+// 80°N…58°S) tested against simplified continental polygons (lon/lat, ray casting).
+// Zero network assets; the hub marker is placed from real coordinates: 31.72°N, 72.98°E — Chiniot.
+const COLS = 64, ROWS = 24, TOP = 80, BOT = -58;
+
+const POLYGONS: [number, number][][] = [
+  // North America
+  [[-168,65],[-150,70],[-125,72],[-95,73],[-78,68],[-62,52],[-55,47],[-66,44],[-76,35],[-81,25],[-97,17],[-105,20],[-117,32],[-125,40],[-130,54],[-150,60]],
+  // Greenland
+  [[-45,60],[-20,70],[-22,83],[-58,82],[-57,70]],
+  // Iceland
+  [[-24,64],[-14,66],[-16,63]],
+  // South America
+  [[-80,10],[-60,12],[-50,5],[-35,-5],[-40,-20],[-48,-26],[-58,-38],[-70,-55],[-75,-45],[-71,-18],[-80,-4]],
+  // Eurasia (mainland incl. India + SE Asia)
+  [[-10,36],[0,43],[-4,48],[8,57],[20,56],[28,60],[32,70],[60,70],[100,72],[140,70],[160,68],[178,66],[170,60],[155,54],[140,47],[130,42],[122,37],[122,28],[108,20],[103,9],[95,15],[88,20],[80,8],[72,19],[60,25],[50,29],[44,38],[35,36],[28,41],[20,42],[12,38],[3,42]],
+  // Africa
+  [[-17,15],[-10,32],[10,37],[25,32],[35,30],[43,12],[51,12],[41,-4],[35,-20],[26,-34],[18,-34],[12,-18],[8,4],[-8,5]],
+  // Madagascar
+  [[43,-13],[50,-16],[49,-25],[45,-25]],
+  // British Isles
+  [[-5,50],[1,52],[-2,58],[-8,55]],
+  // Scandinavia supplement (Baltic carve is implied by Eurasia edge)
+  // Japan arc
+  [[130,31],[135,34],[140,38],[142,43],[145,44],[141,40],[136,34],[131,30]],
+  // Indonesia / New Guinea strip
+  [[95,5],[105,0],[115,-3],[125,-2],[135,-3],[142,-4],[146,-8],[135,-7],[125,-6],[115,-8],[103,-6],[96,0]],
+  // Australia
+  [[113,-22],[122,-17],[132,-11],[142,-11],[147,-18],[153,-27],[149,-38],[140,-38],[131,-31],[115,-33]],
+  // New Zealand
+  [[166,-45],[173,-41],[176,-38],[174,-36],[170,-43],[167,-46]],
+  // Sri Lanka dot-region
+  [[79,9],[81,7],[80,6]],
+];
+
+function inPoly(x: number, y: number, poly: [number, number][]): boolean {
+  let c = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+}
+
+const dots: { x: number; y: number }[] = [];
+for (let r = 0; r < ROWS; r++) {
+  const lat = TOP - (r * (TOP - BOT)) / (ROWS - 1);
+  for (let cIdx = 0; cIdx < COLS; cIdx++) {
+    const lon = -180 + (cIdx * 360) / COLS + 360 / COLS / 2;
+    if (POLYGONS.some((p) => inPoly(lon, lat, p))) dots.push({ x: cIdx, y: r });
+  }
+}
+
+const lat = 31.72, lon = 72.98;
+const col = Math.round(((lon + 180) / 360) * COLS) % COLS;
+const row = Math.max(0, Math.min(ROWS - 1, Math.round(((TOP - lat) / (TOP - BOT)) * (ROWS - 1))));
+const P = 12;
+---
+<figure class="worldmap" role="img" aria-label="Dot-matrix world map with one highlighted node at 31.7 degrees north, 73 degrees east — Chiniot, Pakistan. Remote-first, UTC plus five.">
+  <svg viewBox={`-4 -4 ${COLS * P + 8} ${ROWS * P + 8}`} xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    {dots.map((d) => <circle class="dot" cx={d.x * P + P / 2} cy={d.y * P + P / 2} r="1.9" />)}
+    <circle class="ring" cx={col * P + P / 2} cy={row * P + P / 2} r="4.2" />
+    <circle class="hub" cx={col * P + P / 2} cy={row * P + P / 2} r="3.2" />
+  </svg>
+  <figcaption class="cap">
+    <span><b>◉</b> 31.72°N 72.98°E — Chiniot, Punjab · remote-first</span>
+    <span>UTC+5 (Karachi)</span>
+  </figcaption>
+</figure>

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /data/
+
+# evidence JSONs stay fetchable by link, just off the crawl graph.
+
+Sitemap: https://ahmadrrrtx1.github.io/sitemap-index.xml

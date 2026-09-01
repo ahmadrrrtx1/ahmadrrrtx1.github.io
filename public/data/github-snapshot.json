@@ -1,0 +1,124 @@
+{
+  "fetchedAt": "2026-09-01T15:31:58.896Z",
+  "repos": {
+    "xr": {
+      "stars": 5,
+      "pushedAt": "2026-09-01T09:03:57Z",
+      "description": "XR — the secure, self-hosted AI agent. BYOK · local-first · spend-capped · tamper-evident. by rrrtx",
+      "license": "MIT",
+      "archived": false
+    },
+    "xr-foundation-model": {
+      "stars": 1,
+      "pushedAt": "2026-08-13T11:41:46Z",
+      "description": null,
+      "license": "NOASSERTION",
+      "archived": false
+    },
+    "Gemma-4-RSS-Intelligence-Monitor": {
+      "stars": 4,
+      "pushedAt": "2026-06-21T11:28:02Z",
+      "description": "Intelligent developer news monitoring powered by Gemma 4 E4B — running on a $7/month server with zero API costs.",
+      "license": "Apache-2.0",
+      "archived": false
+    },
+    "CivicShield-ai": {
+      "stars": 3,
+      "pushedAt": "2026-07-06T09:40:08Z",
+      "description": "CivicShield AI is built to help people navigate public benefits, government services, and urgent support pathways without sacrificing trust",
+      "license": "MIT",
+      "archived": false
+    },
+    "commit-canvas": {
+      "stars": 3,
+      "pushedAt": "2026-06-11T16:27:06Z",
+      "description": "Turn any git repository into a beautiful, animated, shareable story page — zero cost, zero auth, one command.",
+      "license": "MIT",
+      "archived": false
+    },
+    "TruthCI": {
+      "stars": 5,
+      "pushedAt": "2026-06-09T19:14:38Z",
+      "description": null,
+      "license": null,
+      "archived": false
+    },
+    "AegisRoute": {
+      "stars": 1,
+      "pushedAt": "2026-08-01T16:51:35Z",
+      "description": "offline-first notification routing for multimodal message streams",
+      "license": "Apache-2.0",
+      "archived": false
+    },
+    "NovaWeather": {
+      "stars": 3,
+      "pushedAt": "2026-08-05T01:54:06Z",
+      "description": "A cinematic, mission-control-grade weather application — real-time WebGL Earth, live radar & satellite layers, air quality, astronomy, and climate analytics. Powered entirely by free, open data.",
+      "license": "MIT",
+      "archived": false
+    },
+    "brainrot-iq": {
+      "stars": 3,
+      "pushedAt": "2026-07-25T15:19:31Z",
+      "description": "Best Quiz game to test your brain rot level lol",
+      "license": null,
+      "archived": false
+    }
+  },
+  "recentCommits": [
+    {
+      "repo": "xr",
+      "sha": "ea21bd4",
+      "msg": "Merge pull request #75 from ahmadrrrtx/phase2/decision-boundary-hardening",
+      "date": "2026-09-01T09:03:57Z",
+      "url": "https://github.com/ahmadrrrtx/xr/commit/ea21bd434583e5e6547e17946fa6937522b84de2"
+    },
+    {
+      "repo": "xr",
+      "sha": "5e032b0",
+      "msg": "Fix CI: gitleaks allowlist for preview fixtures; hermetic secret-broker tests (no shared-e",
+      "date": "2026-09-01T08:54:26Z",
+      "url": "https://github.com/ahmadrrrtx/xr/commit/5e032b08a4ecab6af22ac25ebcff0e697c56d653"
+    },
+    {
+      "repo": "xr-foundation-model",
+      "sha": "421fac0",
+      "msg": "feat(neurotopo): XRFM-NeuroTopo v1 implementation (Phases 0-16)",
+      "date": "2026-08-13T11:33:44Z",
+      "url": "https://github.com/ahmadrrrtx/xr-foundation-model/commit/421fac0d9997a07e3b6d950b143f8afc3ae67ce0"
+    },
+    {
+      "repo": "xr-foundation-model",
+      "sha": "4a90b7e",
+      "msg": "feat(v1.1): forensic audit remediation + GPU readiness + training preparation (squashed)",
+      "date": "2026-08-08T13:11:11Z",
+      "url": "https://github.com/ahmadrrrtx/xr-foundation-model/commit/4a90b7e74f04f82bd4d9e6d5b34b7308721d25f9"
+    },
+    {
+      "repo": "NovaWeather",
+      "sha": "d59310e",
+      "msg": "refactor: premium UI/UX overhaul — minimal, professional, restrained",
+      "date": "2026-08-05T01:52:14Z",
+      "url": "https://github.com/ahmadrrrtx/NovaWeather/commit/d59310ea544f3ce804dd3b058fa9c1d0ef6bf9f2"
+    },
+    {
+      "repo": "NovaWeather",
+      "sha": "b5b7cd1",
+      "msg": "feat: NovaWeather — next-generation 3D weather experience",
+      "date": "2026-08-05T00:21:09Z",
+      "url": "https://github.com/ahmadrrrtx/NovaWeather/commit/b5b7cd1f63653fa67e9793fa112f1e0e3a84e1a6"
+    }
+  ],
+  "xrCi": {
+    "name": "Cross-Platform CI",
+    "status": "completed",
+    "conclusion": "failure",
+    "url": "https://github.com/ahmadrrrtx/xr/actions/runs/33490268285",
+    "at": "2026-09-01T09:11:27Z"
+  },
+  "npm": {
+    "pkg": "@rrrtx/xr",
+    "latest": "3.1.5",
+    "url": "https://www.npmjs.com/package/@rrrtx/xr"
+  }
+}

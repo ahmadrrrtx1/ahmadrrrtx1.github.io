@@ -1,0 +1,59 @@
+---
+import Layout from "../layouts/base.astro";
+import Panel from "../components/panel.astro";
+import { SNAP, REPORT } from "../lib/site";
+---
+<Layout title="~/colophon — how this console is built · Muhammad Ahmad" desc="The machinery of the site itself: the evidence verifier, budgets, fonts, and the rules the copy must pass." path="~/colophon" noIndex>
+  <div style="max-width:880px;margin:0 auto">
+    <Panel h1="Colophon — how this site is built" cmd="man site">
+      <div class="prose">
+        <p class="lead">This portfolio is dogfooding: it holds itself to the same policy gate its
+        subject builds for agent runtimes. Below is the entire trick, so you can rebuild it — or
+        audit us for skipping it.</p>
+
+        <h2><span class="num">01</span>The evidence loop</h2>
+        <ol>
+          <li><b>Claims are data, not prose.</b> Every metric on the site must resolve to an entry in
+          <code>evidence.json</code> (claim → status → URL). A page that cites a claim without a ledger
+          entry fails <code>npm run build</code>.</li>
+          <li><b>Stats are fetched, not typed.</b> A build-time script pulls repo counts, release version,
+          CI conclusion and the commit feed from GitHub/npm and checks the snapshot into the repo. No stale
+          numbers; no cherry-picked ones — the xr CI row says "failure" when it's failure.</li>
+          <li><b>Nightly verifier.</b> A scheduled action re-requests every evidence link and demo URL on
+          the site. A dead link doesn't disappear; it shows up as a <code>⚠</code> row in the footer stamp
+          and in the <code>verify</code> command output. Link rot becomes a visible state, not an accusation
+          waiting to happen.</li>
+          <li><b>Statuses are derived.</b> Shipped/Live/On-hold chips compute from push dates and repo
+          state — they cannot be manually inflated, because they aren't typed anywhere.</li>
+          <li><b>Copy gate.</b> A banned-phrase lint (motivational adjectives, rocket emoji, "welcome to my…"-style openers — full list in `check-data.mjs`) runs pre-build.
+          <li><b>The ask assistant has no model in the loop.</b> A build-time script chunks every page into quotable passages; the browser
+          scores them with TF-IDF and answers with quotes linked to their source. It cannot invent a fact about me that isn't on this site — <code>/ask</code> explains the pipeline.</li>
+          Taste, enforced.</li>
+        </ol>
+
+        <h2><span class="num">02</span>Construction</h2>
+        <ul>
+          <li>Astro 5, static output — content ships as HTML; the page is complete with JavaScript off.</li>
+          <li>The command palette + shell are hand-rolled vanilla JS — measured at build: 13.9 KB raw / 6.0 KB gzipped total
+          on the home page (shell, boot sequence, and the ask engine included), no framework, no cmdk — with combobox/listbox
+          semantics, focus return, history, and a deep-link <code>?cmd=</code> verb.
+          The ask assistant additionally fetches a static 62 KB (≈20 KB gzipped) chunk index — only when you first open it.</li>
+          <li>Type: Martian Mono Variable (display), Geist Mono (console chrome/data), Inter (prose).
+          Self-hosted, variable, latin-subset — three files, no font CDN.</li>
+          <li>Dark-first tokens with a real light inversion; <code>prefers-reduced-motion</code>, <code>prefers-contrast</code> and Windows forced-colors are implemented, not aspirational.</li>
+          <li>Deploy: GitHub Pages straight from this repo — a push runs the same checks this page
+          describes, builds, and ships; the nightly link verifier lives in the same Actions. The whole site
+          costs what a cron job costs.</li>
+        </ul>
+
+        <h2><span class="num">03</span>State of the machine</h2>
+        <ul>
+          <li>data snapshot: {SNAP.fetchedAt.slice(0, 10)} (repos, CI, npm)</li>
+          <li>last evidence check: {REPORT.verifiedAt?.slice(0, 10) ?? "—"} → {REPORT.pass}/{REPORT.total} pass · {REPORT.warn} warn · {REPORT.fail} fail</li>
+          <li>budgets: zero-JS content path; console island 4.5 KB gz (the only JS on the page); fonts ≤ 3 files; images are screenshots or diagrams, never generated decoration.</li>
+        </ul>
+        <p class="meta">Known limits of this page: the palette fuzzy-matches verbs, not pages; the light theme is tested, not art-directed; OG images are static SVG/PNG templates. All three are on purpose — a site that ships receipts shouldn't ship promises it gates on itself.</p>
+      </div>
+    </Panel>
+  </div>
+</Layout>

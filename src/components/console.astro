@@ -1,0 +1,272 @@
+---
+/* The Attestation Console — command palette + prompt shell.
+   Zero framework by design (strategy §15.2: palette → vanilla). One engine
+   (§10.1): the registry drives both surfaces; every command resolves to a
+   real route, a real link, or a real read-only action. */
+import commands from "../data/commands.json";
+import evidenceJson from "../data/evidence.json";
+import projects from "../data/projects.json";
+import lab from "../data/lab.json";
+import { SNAP, REPORT, CONTACT, HAS_RESUME, relTime } from "../lib/site";
+
+const data = {
+  commands: commands.entries, epilogue: commands.epilogue,
+  evidence: evidenceJson.entries,
+  projects: [...projects.featured, ...projects.supporting].map((p: any) => ({ name: p.name, slug: p.slug, oneLine: p.oneLine, repo: p.repo, demo: p.demo ?? null })),
+  lab: lab.entries.map((l: any) => ({ name: l.name, status: l.status, repo: l.repo, blurb: l.blurb })),
+  commits: SNAP.recentCommits, fetchedAt: SNAP.fetchedAt, npm: SNAP.npm, xrCi: SNAP.xrCi,
+  report: { verifiedAt: REPORT.verifiedAt, pass: REPORT.pass, total: REPORT.total, warn: REPORT.warn, fail: REPORT.fail },
+  contact: { ...CONTACT, resume: HAS_RESUME ? "/resume.pdf" : null },
+  status: [
+    ["role", "Agentic AI Engineer"],
+    ["focus", "agent runtimes · evals · audits"],
+    ["availability", "open — remote, contract or full-time"],
+    ["location", "Pakistan · UTC+5 (Karachi)"],
+    ["education", "ICS (Computer Science) — completed 2026"],
+    ["latest release", SNAP.npm ? `@rrrtx/xr v${SNAP.npm.latest} (npm)` : "—"],
+    ["xr", `${SNAP.repos.xr?.stars ?? "?"}★ · pushed ${relTime(SNAP.repos.xr?.pushedAt)}`],
+    ["last commit", SNAP.recentCommits[0] ? `${SNAP.recentCommits[0].repo}@${SNAP.recentCommits[0].sha} · ${relTime(SNAP.recentCommits[0].date)}` : "—"],
+  ],
+};
+---
+<script type="application/json" id="console-data" set:html={JSON.stringify(data)} />
+
+<div class="console-bar" id="cbar">
+  <form role="search" aria-label="site command shell">
+    <label class="sr-only" for="cin">command</label>
+    <span class="prompt-sym" aria-hidden="true">&gt;</span>
+    <input id="cin" name="cmd" type="text" autocomplete="off" spellcheck="false" placeholder="ls, evidence, verify, help…" aria-expanded="false" aria-controls="cout-lines" />
+  </form>
+</div>
+
+<section class="console-out" id="cout" aria-label="console output" role="region">
+  <header>
+    <span id="cout-title">output</span>
+    <span><button id="cout-copy" type="button" title="copy this output">⧉ copy</button> <button id="cout-close" type="button">esc ✕</button></span>
+  </header>
+  <div class="lines" id="cout-lines" role="status" aria-live="polite"></div>
+</section>
+
+<div class="overlay" id="overlay">
+  <div class="palette" role="dialog" aria-modal="true" aria-label="command palette">
+    <input id="pin" type="text" placeholder="jump to… or run a command" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="plist" aria-label="search commands" />
+    <div class="list" id="plist" role="listbox" aria-label="commands"></div>
+    <footer><span><span class="kbd">↑↓</span> move</span><span><span class="kbd">↵</span> run</span><span><span class="kbd">esc</span> close</span><span class="right">{data.epilogue ? "nothing here pretends to execute — every command goes somewhere real" : ""}</span></footer>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+  const D = JSON.parse(document.getElementById("console-data")!.textContent!);
+  const $ = <T extends HTMLElement>(s: string) => document.querySelector(s) as T;
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
+  const hist = { load: (k: string) => { try { return JSON.parse(localStorage.getItem(k) ?? "[]"); } catch { return []; } }, save: (k: string, v: string[]) => { try { localStorage.setItem(k, JSON.stringify(v.slice(0, 40))); } catch {} } };
+
+  const out = $<HTMLElement>("#cout"), outLines = $<HTMLElement>("#cout-lines"), outTitle = $<HTMLElement>("#cout-title");
+  const bar = $<HTMLElement>("#cbar"), cin = $<HTMLInputElement>("#cin");
+  const overlay = $<HTMLElement>("#overlay"), pin = $<HTMLInputElement>("#pin"), plist = $<HTMLElement>("#plist");
+  const toast = $<HTMLElement>("#toast");
+  let lastFocus: Element | null = null, sel = 0;
+
+  function showToast(msg: string) { toast.textContent = msg; toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 1600); }
+  function show(lines: { html: string }[], title: string) {
+    outTitle.textContent = title;
+    outLines.innerHTML = lines.length ? lines.map((l) => l.html).join("<br>") : '<span class="meta">— nothing to show —</span>';
+    out.classList.add("show");
+  }
+  const link = (label: string, href: string, ext = true) => `<a href="${esc(href)}" ${ext && /^https?:/.test(href) ? 'rel="noopener"' : ""}>${esc(label)}${ext && /^https?:/.test(href) ? " ↗" : ""}</a>`;
+  const glyph = (ok: boolean, warn = false) => warn ? "⚠" : ok ? "✔" : "✘";
+
+  /* ── command semantics ── */
+  function cmdHelp(): { lines: { html: string }[]; title: string } {
+    const groups = new Map();
+    D.commands.forEach((c: any) => { groups.set(c.group, [...(groups.get(c.group) ?? []), c]); });
+    const lines: { html: string }[] = [];
+    for (const [g, items] of groups) {
+      lines.push({ html: `<b class="meta">${esc(g.toUpperCase())}</b>` });
+      for (const it of items as any[]) lines.push({ html: `&nbsp;&nbsp;<span class="hash">${esc(it.verb)}</span>${it.hint ? ` ${esc(it.hint)}` : ""} — ${esc(it.desc)}` });
+    }
+    lines.push({ html: `<br><span class="meta">${esc(D.epilogue)}</span>` });
+    return { lines, title: "help — the grammar is small on purpose" };
+  }
+  function cmdStatus() { return { lines: D.status.map((r: string[]) => ({ html: `<span class="meta">${esc(r[0])}</span>:&nbsp; ${esc(r[1])}` })), title: "status — facts only, no uptime cosplay" }; }
+  function cmdCommits(n = 6) {
+    const rows = D.commits.slice(0, Math.max(1, Math.min(15, n)));
+    return { lines: rows.map((c: any) => ({ html: `<span class="hash">${esc(c.sha)}</span> ${link(`${c.repo}: ${c.msg}`, c.url)}` })), title: `git log --oneline -${rows.length} · real data, fetched ${new Date(D.fetchedAt).toISOString().slice(0, 10)}` };
+  }
+  function cmdEvidence(arg?: string) {
+    const rows = arg ? D.evidence.filter((e: any) => e.id.includes(arg)) : D.evidence;
+    const lines = rows.map((e: any) => ({ html: `${glyph(true)} <span class="meta">${esc(e.status)}</span> — ${esc(e.claim)} ${link(e.id, e.href)}` }));
+    if (!lines.length) lines.push({ html: `<span class="meta">no ledger row for “${esc(arg ?? "")}” — run \`evidence\` with no argument</span>` });
+    return { lines, title: "claims ledger — if a row's link rots, verify will find it" };
+  }
+  async function cmdVerify() {
+    try {
+      const r = await fetch("/data/evidence-report.json"); if (!r.ok) throw new Error(String(r.status));
+      const rep = await r.json();
+      const lines = [
+        { html: `<b>${glyph(rep.fail === 0, rep.warn > 0)}</b> ${rep.pass}/${rep.total} pass · ${rep.warn} warn · ${rep.fail} fail — checked ${esc(String(rep.verifiedAt).slice(0, 10))}` },
+        ...rep.results.filter((x: any) => x.status !== "pass").map((x: any) => ({ html: `<span class="line-err">${x.status === "fail" ? "✘" : "⚠"} [${x.code}] ${link(x.url, x.url)}</span>` })),
+        { html: `<br><span class="meta">this check runs nightly in CI; the footer stamp is from the latest build. a portfolio that can't admit a dead link isn't trustworthy.</span>` },
+      ];
+      return { lines, title: "verify — the site checking itself" };
+    } catch { return { lines: [{ html: '<span class="line-err">no report file — run `npm run verify` at build</span>' }], title: "verify" }; }
+  }
+  function cmdContact() {
+    navigator.clipboard?.writeText(D.contact.email).then(() => showToast(`✔ ${D.contact.email} copied`), () => {});
+    const lines = [{ html: `${link(D.contact.email, "mailto:" + D.contact.email)} <span class="meta">— copied to clipboard</span>` }, { html: link("github.com/ahmadrrrtx", D.contact.github) }, { html: link("linkedin.com/in/ahmadrrrtx", D.contact.linkedin) }];
+    if (D.contact.resume) lines.push({ html: link("resume.pdf", D.contact.resume, false) });
+    lines.push({ html: `<span class="meta">WhatsApp on request via email — keeps the scrapers honest</span>` });
+    return { lines, title: "connect" };
+  }
+  function cmdLs(where?: string) {
+    const items: { html: string }[] = [];
+    if (!where || where === "~/") {
+      items.push({ html: `<span class="hash">drwxr-xr-x</span> ${link("work/ — 5 case studies with evidence ledgers", "/work", false)}` });
+      items.push({ html: `<span class="hash">drwxr-xr-x</span> ${link("lab/ — 9 experiments, honest statuses", "/lab", false)}` });
+      items.push({ html: `<span class="hash">drwxr-xr-x</span> ${link("writing/ — 3 articles that prove different muscles", "/writing", false)}` });
+      items.push({ html: `<span class="hash">drwxr-xr-x</span> ${link("credentials/ — the short list that measured something", "/credentials", false)}` });
+      items.push({ html: `<span class="hash">-rw-r--r--</span> ${link("about/summary.txt — the human, condensed", "/about", false)}` });
+      items.push({ html: `<span class="hash">-rw-r--r--</span> ${link("contact", "/contact", false)}` });
+      return { lines: items, title: "ls ~/" };
+    }
+    if (/^~?\/?(work)?\/?$/.test(where)) {
+      D.projects.forEach((p: any) => items.push({ html: `<span class="hash">${esc(p.name.padEnd(20, " ").slice(0, 20))}</span> ${link(p.oneLine, "/work/" + p.slug, false)}` }));
+      return { lines: items, title: "ls ~/work — ranked, not exhaustive" };
+    }
+    if (/^~?\/?lab\/?$/.test(where)) {
+      D.lab.forEach((l: any) => items.push({ html: `<span class="meta">${esc(l.status.padEnd(9, " "))}</span> ${link(l.name, l.repo)}` }));
+      return { lines: items, title: "ls ~/lab — the receipts graveyard, in a good way" };
+    }
+    return cmdNotFound(`ls ${where}`);
+  }
+  function cmdOpen(name?: string) {
+    const q = (name ?? "").replace(/^~?\//, "").toLowerCase();
+    const p = D.projects.find((p: any) => p.name.toLowerCase() === q || p.slug === q);
+    if (p) return { lines: [{ html: link("repo ↗", p.repo) }, { html: p.demo ? link("demo ↗", p.demo) : `<span class="meta">no live demo — said so honestly on the case study</span>` }], title: `open ${p.name}` };
+    if (q === "github") return { lines: [{ html: link(D.contact.github, D.contact.github) }], title: "open github" };
+    if (q === "demo") return { lines: [{ html: link("xr dashboard ↗", "https://xr-gules.vercel.app/") }], title: "open demo" };
+    return cmdNotFound(`open ${name ?? ""}`);
+  }
+  function cmdNotFound(line: string) {
+    const near = D.commands.filter((c: any) => subsequence(line.split(" ")[0] ?? "", c.verb)).slice(0, 3);
+    return { lines: [{ html: `<span class="line-err">✘ no man page for “${esc(line)}”${near.length ? ` — did you mean ${near.map((c: any) => `<span class="hash">${esc(c.verb)}</span>`).join(", ")}?` : ""}</span>` }, { html: `<span class="meta">\`help\` lists the grammar; \`ls\` lists the site.</span>` }], title: "sh: command not found" };
+  }
+  const subsequence = (q: string, s: string) => { let i = 0; for (const ch of s) if (ch === q[i]) i++; return q.length > 0 && i === q.length; };
+  function score(q: string, text: string) {
+    if (!q) return 1; const t = text.toLowerCase(); const i = t.indexOf(q);
+    if (i === 0) return 100; if (i > 0) return 60 - i;
+    return subsequence(q, t) ? 20 : 0;
+  }
+
+  const executors = new Map<string, (arg?: string) => any | Promise<any>>([
+    ["help", cmdHelp], ["status", cmdStatus], ["commits", (a) => cmdCommits(parseInt(a ?? "6", 10) || 6)],
+    ["evidence", cmdEvidence], ["verify", cmdVerify], ["contact", cmdContact], ["ls", cmdLs], ["open", cmdOpen],
+  ]);
+  async function run(line: string) {
+    line = line.trim(); if (!line) return;
+    hist.save("xr-shell-history", [line, ...hist.load("xr-shell-history").filter((x: string) => x !== line)]);
+    const [verb, ...rest] = line.split(/\s+/); const arg = rest.join(" ");
+    switch (verb) {
+      case "clear": out.classList.remove("show"); return;
+      case "whoami": location.assign("/#whoami"); return;
+      case "cd": { const target = arg.replace(/^~\/?/, "/").replace(/\/$/, ""); const known = ["/work", "/lab", "/writing", "/credentials", "/about", "/contact", "/colophon"]; if (known.includes(target) || /^\/work\//.test(target)) return location.assign(target); const p = D.projects.find((p: any) => p.slug === rest[0] || p.name === rest[0]); if (p) return location.assign("/work/" + p.slug); return show(cmdNotFound(line).lines, cmdNotFound(line).title); }
+      case "cat": { const m: Record<string, string> = { "~/about/summary.txt": "/about", "about/summary.txt": "/about", "~/writing": "/writing", "~/credentials": "/credentials" }; if (m[arg]) return location.assign(m[arg]); if (arg === "help" || !arg) return show(cmdHelp().lines, cmdHelp().title); return show(cmdNotFound(line).lines, "cat"); }
+      case "theme": return toggleTheme();
+    }
+    const ex = executors.get(verb);
+    if (ex) { const res = await ex(arg); return show(res.lines, res.title); }
+    const navs: Record<string, [string, string]> = { work: ["/work", "ls ~/work"], lab: ["/lab", "ls ~/lab"], writing: ["/writing", "cat ~/writing"], credentials: ["/credentials", "ls ~/credentials"], about: ["/about", "cat ~/about/summary.txt"] };
+    if (navs[verb] && !arg) return location.assign(navs[verb][0]);
+    show(cmdNotFound(line).lines, cmdNotFound(line).title);
+  }
+
+  /* ── shell input ── */
+  let hIdx = -1;
+  bar!.querySelector("form")!.addEventListener("submit", (e) => { e.preventDefault(); const v = cin!.value; cin!.value = ""; run(v); });
+  cin!.addEventListener("keydown", (e: KeyboardEvent) => {
+    if (e.key === "ArrowUp") { e.preventDefault(); const H = hist.load("xr-shell-history"); if (H.length) { hIdx = Math.min(hIdx + 1, H.length - 1); cin!.value = H[hIdx]; } }
+    else if (e.key === "ArrowDown") { e.preventDefault(); const H = hist.load("xr-shell-history"); hIdx = Math.max(hIdx - 1, -1); cin!.value = hIdx < 0 ? "" : H[hIdx]; }
+    else if (e.key === "Tab") { e.preventDefault(); const v = cin!.value.trim().split(" ")[0]; const hit = D.commands.find((c: any) => c.verb.startsWith(v) && v); if (hit) cin!.value = hit.verb + (hit.hint ? " " : ""); }
+    else if (e.key === "Escape") { out!.classList.remove("show"); cin!.blur(); }
+  });
+
+  /* ── palette ── */
+  function buildList(q: string) {
+    const recents: string[] = hist.load("xr-recent");
+    const items = D.commands.map((c: any) => ({ ...c, s: score(q, `${c.verb} ${c.desc}`) + (recents.includes(c.id) ? 30 : 0) })).filter((c: any) => c.s > 0);
+    if (q && !items.some((i: any) => i.verb === q)) items.push({ id: "__run", verb: `run: ${q}`, hint: "", group: "shell", desc: "no exact command — this line runs in the shell", kind: "run", s: 15 });
+    items.sort((a: any, b: any) => b.s - a.s);
+    return items.slice(0, 12);
+  }
+  function renderList(q: string) {
+    const items = buildList(q);
+    sel = 0;
+    plist!.innerHTML = items.length ? items.map((c: any, i: number) => `<div class="item" role="option" id="pi${i}" data-i="${i}" aria-selected="${i === 0}"><span class="v">${esc(c.verb)}</span><span>${esc(c.desc)}</span><span class="d">${esc(c.group)}</span></div>`).join("") : `<div class="empty">nothing matches — <span class="hash">help</span> shows the grammar, or press <span class="kbd">↵</span> to run “${esc(q)}” in the shell.</div>`;
+    (plist as any)._items = items;
+    pin!.setAttribute("aria-activedescendant", items.length ? "pi0" : "");
+  }
+  function openPalette(prefill = "") {
+    lastFocus = document.activeElement;
+    overlay!.classList.add("show"); pin!.value = prefill; renderList(""); pin!.focus();
+    cin!.setAttribute("aria-expanded", "true");
+  }
+  function closePalette() { overlay!.classList.remove("show"); (lastFocus as HTMLElement)?.focus?.(); cin!.setAttribute("aria-expanded", "false"); }
+  function activate(c: any) {
+    hist.save("xr-recent", [c.id, ...hist.load("xr-recent").filter((x: string) => x !== c.id)]);
+    closePalette();
+    if (c.kind === "run") return run(pin!.value);
+    if (c.kind === "nav") { c.target.startsWith("#") ? location.assign("/" + c.target) : location.assign(c.target); return; }
+    if (c.kind === "ext") { window.open(c.target, "_blank", "noopener"); return; }
+    if (c.kind === "theme") return toggleTheme();
+    run(c.verb);
+  }
+  overlay!.addEventListener("mousedown", (e) => { if (e.target === overlay) closePalette(); });
+  plist!.addEventListener("click", (e) => { const el = (e.target as HTMLElement).closest(".item"); if (el) activate((plist as any)._items[+(el as HTMLElement).dataset.i!]); });
+  pin!.addEventListener("input", () => renderList(pin!.value.trim().toLowerCase()));
+  pin!.addEventListener("keydown", (e: KeyboardEvent) => {
+    const items = (plist as any)._items ?? [];
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); if (!items.length) return; sel = (sel + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+      plist.querySelectorAll(".item").forEach((n, i) => n.setAttribute("aria-selected", String(i === sel))); pin!.setAttribute("aria-activedescendant", `pi${sel}`); }
+    else if (e.key === "Enter") { e.preventDefault(); items.length ? activate(items[sel]) : run(pin!.value); }
+    else if (e.key === "Escape") { e.preventDefault(); closePalette(); }
+    else if (e.key === "Tab") { e.preventDefault(); const v = pin!.value.trim().split(" ")[0]; const hit = items.find((c: any) => c.verb.startsWith(v)); if (hit) { pin!.value = hit.verb; renderList(hit.verb.toLowerCase()); } }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); overlay!.classList.contains("show") ? closePalette() : openPalette(); }
+    else if (e.key === "?" && !["INPUT", "TEXTAREA"].includes((e.target as HTMLElement).tagName)) { e.preventDefault(); openPalette("help"); }
+    else if (e.key === "Escape" && out!.classList.contains("show")) { out!.classList.remove("show"); }
+  });
+  $("#palette-btn")!.addEventListener("click", () => openPalette());
+  $("#cout-close")!.addEventListener("click", () => out!.classList.remove("show"));
+  $("#cout-copy")!.addEventListener("click", () => navigator.clipboard?.writeText(outLines!.innerText).then(() => showToast("✔ output copied")));
+
+  /* prompt-style panel headers run their command through the palette */
+  document.querySelectorAll<HTMLButtonElement>("[data-cmd]").forEach((b) => b.addEventListener("click", () => { const v = b.dataset.cmd!.split(" ")[0]; if (["ls", "cat", "whoami", "git", "tail"].includes(v)) openPalette(v === "git" ? "commits" : v === "tail" ? "status" : b.dataset.cmd!.replace(/^~?\//, "")); else openPalette(b.dataset.cmd!); }));
+
+  /* theme */
+  function toggleTheme() { const cur = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light"; document.documentElement.setAttribute("data-theme", cur); try { localStorage.setItem("theme", cur); } catch {} (document.getElementById("theme-btn") as HTMLButtonElement)?.setAttribute("aria-pressed", String(cur === "light")); }
+  $("#theme-btn")!.addEventListener("click", toggleTheme);
+  if (document.documentElement.getAttribute("data-theme") === "light") (document.getElementById("theme-btn") as HTMLButtonElement).setAttribute("aria-pressed", "true");
+
+  /* nav hide/show lives in the layout's inline script (base.astro) — independent of this module */
+
+  /* mobile: tap the collapsed bar to open the palette (thumb-reach sheet) */
+  bar!.addEventListener("click", (e) => { if (e.target === bar) { if (matchMedia("(max-width:767px)").matches) openPalette(); else cin!.focus(); } });
+  bar!.classList.toggle("open", false);
+
+  /* deep-link: /?cmd= runs once on load, then cleans the URL */
+  const q = new URLSearchParams(location.search);
+  if (q.get("cmd")) { setTimeout(() => { show && run(q.get("cmd")!); history.replaceState(null, "", location.pathname); }, 60); }
+  const hashCmd = location.hash.match(/cmd=([^&]+)/);
+  if (hashCmd) setTimeout(() => run(decodeURIComponent(hashCmd[1])), 60);
+
+  /* generic copy buttons */
+  document.querySelectorAll<HTMLElement>("[data-copy]").forEach((b) => b.addEventListener("click", () => {
+    navigator.clipboard?.writeText(b.dataset.copy!).then(() => { showToast(`✔ ${b.dataset.copy} copied`); });
+  }));
+
+  document.getElementById("yr")!.textContent = String(new Date().getFullYear());
+</script>

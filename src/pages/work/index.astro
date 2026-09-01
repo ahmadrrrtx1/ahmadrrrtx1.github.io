@@ -1,0 +1,44 @@
+---
+import Layout from "../../layouts/base.astro";
+import Panel from "../../components/panel.astro";
+import Chip from "../../components/chip.astro";
+import projects from "../../data/projects.json";
+import { derivedStatus } from "../../lib/site";
+---
+<Layout title="~/work — case studies with evidence ledgers · Muhammad Ahmad" path="~/work">
+  <div style="max-width:980px;margin:0 auto">
+    <Panel h1="Work — case studies with evidence ledgers" cmd="ls ~/work" tail="ranked · not exhaustive">
+      <p class="lead" style="max-width:70ch">Two hero studies, three compact ones. Every number on every
+      page traces to a file in a repo you can open right now — the tables at the top of each study are
+      the same ledgers the console command <code>evidence</code> prints. Lab work lives
+      <a class="tlink" href="/lab">one floor down →</a></p>
+      <div style="margin-top:16px">
+        {[...projects.featured, ...projects.supporting].map((p, i) => {
+          const repoName = p.repo.split("/").pop()!;
+          const st = derivedStatus(repoName, !!p.demo, p.kind);
+          const metrics = (p.metrics ?? []).map((m: any) => `${m.label} ${m.value}`).join(" · ");
+          return <a class="row" href={`/work/${p.slug}`}>
+            <span class="num-watermark">{p.num}</span>
+            <span class="r-body">
+              <span class="r-title" style="font-size:15px">{p.name}</span>
+              <span class="r-oneline">{p.oneLine}</span>
+              <span class="meta">{metrics || p.stack.join(" · ")}</span>
+            </span>
+            <span class="r-right"><Chip status={st.label} tone={st.tone} glyph={st.glyph} /><span class="arrow" aria-hidden="true">→</span></span>
+          </a>;
+        })}
+      </div>
+    </Panel>
+    <div class="cols cols-3" style="margin-top:16px">
+      <Panel cmd="what got cut">
+        <p class="meta" style="font-size:12.5px">A hackathon prototype whose marketing outran its cryptography (a ZK layer that was simulated) — the lesson got promoted into policy instead of a page. Read it as the reason every row above links to source. <span style="color:var(--text-3)">[verified in the July audit; fixed in the habit]</span></p>
+      </Panel>
+      <Panel cmd="how to read these">
+        <p class="meta" style="font-size:12.5px;line-height:1.7">Problem &gt; constraints &gt; decisions &gt; measured results &gt; limitations. No tech-stack tourism; if a library earned a slot, it earned a reason.</p>
+      </Panel>
+      <Panel cmd="reproduce">
+        <p class="meta" style="font-size:12.5px;line-height:1.7">Most numbers here survive a stranger an afternoon with git: run the tests, load the checkpoint, replay the benchmark. That's the bar the copy writes to.</p>
+      </Panel>
+    </div>
+  </div>
+</Layout>

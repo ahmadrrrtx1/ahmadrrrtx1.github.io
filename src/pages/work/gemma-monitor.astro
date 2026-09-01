@@ -1,0 +1,68 @@
+---
+import Case from "../../layouts/case.astro";
+import CodeFig from "../../components/codefig.astro";
+
+const promptExcerpt = `INCLUDE:
+- Stable releases of major projects (v1.0+, security patches, major versions)
+- Breaking changes or deprecations in popular frameworks
+- Critical security vulnerabilities (CVE, patches)
+- Significant new capabilities or architectural changes
+- Major ecosystem announcements
+
+EXCLUDE:
+- Tutorials, how-to guides, "getting started" content
+- Promotional blog posts, sponsored content
+- Minor patch releases (unless security-related)
+- Opinion pieces without new technical information
+- Duplicate news from the same event`;
+---
+<Case
+  name="Gemma Monitor" kind="AUTOMATION" period="2026-05 → running" roles="solo — design, implementation, ops"
+  oneLine="Local-LLM news intelligence in production for $7.40 a month: it replaced the $22 API subscription it was cannibalizing, with real benchmark tables instead of vibes."
+  stack={["Python", "Ollama", "feedparser", "cron", "YAML"]}
+  repo="https://github.com/ahmadrrrtx/Gemma-4-RSS-Intelligence-Monitor"
+  evidenceIds={["g.cost", "g.prompt", "g.article"]}
+  prev={["/work/xr-foundation-model", "XRFM"]} next={["/work/civicshield", "CivicShield"]}
+  jsonld={{ "@context": "https://schema.org", "@type": "SoftwareSourceCode", name: "Gemma-4 RSS Intelligence Monitor", codeRepository: "https://github.com/ahmadrrrtx/Gemma-4-RSS-Intelligence-Monitor", programmingLanguage: "Python", license: "https://spdx.org/licenses/Apache-2.0.html" }}
+>
+  <h2><span class="num">01</span>The problem was the invoice</h2>
+  <p>I was paying ~$22/month for an OpenAI subscription mostly to summarize RSS feeds. That's not an AI
+  strategy, that's a tax. The question that made it a project: what is the cheapest thing that can do
+  <em>exactly this job</em>, reliably, unattended? (Small system; short study. Scope discipline is the point.)</p>
+
+  <h2><span class="num">02</span>The system</h2>
+  <p>One well-organized <code>monitor.py</code>: fetch feeds → build a triage prompt → Gemma 4 E4B via Ollama →
+  post digest to Slack. Scheduled by cron, installed by one script, zero API keys. The interesting part is
+  that the model only does the one step it's genuinely good at — ranking signal against a rubric — while
+  fetching, deduplication, and delivery are boring Python. Defensive HTTP handling and logging are in
+  because a headless automation nobody watches is a lie that pings once a week.</p>
+
+  <CodeFig file="Gemma-4-RSS-Intelligence-Monitor/monitor.py" url="https://github.com/ahmadrrrtx/Gemma-4-RSS-Intelligence-Monitor/blob/main/monitor.py" code={promptExcerpt} lang="python" caption="the actual screening rubric — triage as a decision list, not a temperature roll" />
+
+  <h2><span class="num">03</span>The numbers (method: the README's benchmark tables)</h2>
+  <table>
+    <thead><tr><th>line</th><th>$22 baseline</th><th>this</th></tr></thead>
+    <tbody>
+      <tr><td>monthly cost</td><td>$22.00 API subscription</td><td><b>$7.40</b> (all of it server)</td></tr>
+      <tr><td>API dependency</td><td>yes, key required</td><td>none — local inference</td></tr>
+      <tr><td>model trade-offs</td><td>—</td><td>2B / 9B / 27B measured, tabled, chosen</td></tr>
+    </tbody>
+  </table>
+  <p class="meta">66% reduction, reproducible by running the benchmarks on the same feeds for a week. That sentence, with that method line, is why this small repo out-punches big ones.</p>
+
+  <h2><span class="num">04</span>Why this stays on the site next to a runtime and a GPT</h2>
+  <p>Because it's the artifact I'd want to be interviewed about: a genuinely small problem, fully owned,
+  defended by numbers. The write-up on
+  <a href="https://dev.to/ahmad_rrrtx/i-ran-gemma-4-on-a-7month-server-and-built-an-ai-powered-news-monitor-that-costs-0-to-operate-5gn0" rel="noopener">dev.to</a>
+  carries the same tables — writing it forced me to keep the claims and the code consistent.</p>
+
+  <div class="limits">
+    <h3>Limitations, stated plainly</h3>
+    <ul>
+      <li>"Running in production for weeks+" is author-reported (mine) — the box is mine and private; the code and benchmark method are public.</li>
+      <li>No test suite here; a cron script of this size doesn't earn one, and I won't pretend it does.</li>
+      <li>Slack delivery is hard-wired for my use; a general tool would need a sink abstraction.</li>
+      <li>A second contributor later edited the README — history's public, credit's in it.</li>
+    </ul>
+  </div>
+</Case>

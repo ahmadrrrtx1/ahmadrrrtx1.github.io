@@ -1,0 +1,35 @@
+---
+import Layout from "../layouts/base.astro";
+import Panel from "../components/panel.astro";
+---
+<Layout title="~/cookies — this site sets none; here is what it stores instead · Muhammad Ahmad" desc="Zero cookies. The full table of local storage keys this site uses, what each does, and how to wipe them." path="~/cookies">
+  <div style="max-width:760px;margin:0 auto">
+    <Panel h1="Cookies — zero — and what replaces them" cmd="ls ~/legal/cookies">
+      <div class="prose">
+        <p class="lead">This site sets <b style="color:var(--text)">no cookies at all</b> — first-party or third-party — which is why there is no
+        consent banner blocking your first impression of it. Banners exist to manage tracking; there's nothing to manage.
+        What the site <em>does</em> use is your browser's own local storage, for four UI preferences and one speed cache:</p>
+        <div style="overflow-x:auto">
+          <table class="ledger">
+            <caption>every key, no asterisks</caption>
+            <thead><tr><th>key</th><th>where</th><th>why it exists</th><th>lives until</th></tr></thead>
+            <tbody>
+              <tr><td><b style="color:var(--text)">theme</b></td><td>localStorage</td><td>your dark/light choice, applied before first paint so the page doesn't flash</td><td>you clear it</td></tr>
+              <tr><td><b style="color:var(--text)">xr-nav</b></td><td>localStorage</td><td>whether the chrome nav is collapsed (the eye button)</td><td>you clear it</td></tr>
+              <tr><td><b style="color:var(--text)">xr-booted</b></td><td>sessionStorage</td><td>shows the boot intro once per visit, then never mid-session again</td><td>tab close</td></tr>
+              <tr><td><b style="color:var(--text)">xr-demo-played</b></td><td>sessionStorage</td><td>the terminal replay types once per visit instead of nagging</td><td>tab close</td></tr>
+              <tr><td><b style="color:var(--text)">xr-ask-idx</b></td><td>localStorage</td><td>cached copy of the search index (public site text) so ask answers are instant — no personal data in it, ever</td><td>6 hours</td></tr>
+              <tr><td><b style="color:var(--text)">xr-shell-history</b></td><td>localStorage</td><td>your own command history in the prompt bar, up to 40 lines — ↑ arrow recalls them; they never leave the browser</td><td>you clear it</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h2>Wipe it yourself</h2>
+        <p>Open devtools → Application → Local/Session Storage → delete, or run
+        <code>localStorage.clear(); sessionStorage.clear()</code> in the console. The site degrades gracefully:
+        defaults are dark theme, nav visible, no intro, uncached search. Nothing you lose is anything I kept.</p>
+        <p class="meta">If browser policy someday forces a banner (e.g. consent requirements changing jurisdiction), the honest answer will be the same:
+        these six keys, strictly local, strictly functional. Last revised: 2026-09-01 · see also <a class="tlink" href="/privacy">/privacy</a>.</p>
+      </div>
+    </Panel>
+  </div>
+</Layout>
