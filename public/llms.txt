@@ -34,4 +34,4 @@
 Machine-searchable copy of every page's text: https://ahmadrrrtx1.github.io/data/chat-index.json
 Evidence ledger: https://ahmadrrrtx1.github.io/data/evidence-report.json
 
-*Updated by CI on every push; generated 2026-09-01.*
+*Updated by CI on every push (deployed to GitHub Pages from ahmadrrrtx1/ahmadrrrtx1.github.io); generated 2026-09-01.*
