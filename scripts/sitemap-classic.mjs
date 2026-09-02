@@ -1,21 +1,25 @@
-// Astro emits sitemap-index.xml → sitemap-0.xml (index + child).
-// GSC and every third-party crawler conventionally expects /sitemap.xml
-// as a single self-contained <urlset> — one fetch, no index hop, one
-// less failure mode. We copy the generated child to the classic name;
-// the index and child stay published too (submit whichever you like).
+// Publish /sitemap.xml — the classic path every crawler assumes — as a
+// hand-written minimal <urlset>: one <loc> + build-day <lastmod> per page,
+// no extension namespaces at all. Astro's generated sitemap-index/child
+// remain available; this is the maximally-vanilla GSC target.
 import { readFileSync, writeFileSync } from "node:fs";
 
 const src = new URL("../dist/sitemap-0.xml", import.meta.url);
 const dst = new URL("../dist/sitemap.xml", import.meta.url);
 const xml = readFileSync(src, "utf8");
-if (!xml.startsWith("<?xml") || !xml.includes("</urlset>")) {
-  console.error("sitemap-classic: sitemap-0.xml looks malformed — aborting");
+const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+if (urls.length < 10 || !urls.every((u) => u.startsWith("https://ahmadrrrtx1.github.io/"))) {
+  console.error(`sitemap-classic: refusing to publish (${urls.length} urls, host check failed)`);
   process.exit(1);
 }
-const urls = (xml.match(/<loc>/g) || []).length;
-if (urls < 10) {
-  console.error(`sitemap-classic: only ${urls} urls found — refusing to publish`);
-  process.exit(1);
-}
-writeFileSync(dst, xml);
-console.log(`sitemap-classic: /sitemap.xml written with ${urls} urls (classic name, no index hop)`);
+const lastmod = new Date().toISOString().slice(0, 10);
+const body = urls
+  .map((u) => `  <url>\n    <loc>${u}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>`)
+  .join("\n");
+const out = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${body}
+</urlset>
+`;
+writeFileSync(dst, out);
+console.log(`sitemap-classic: hand-written /sitemap.xml — ${urls.length} urls, lastmod ${lastmod}, plain LF, zero extension namespaces`);
