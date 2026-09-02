@@ -10,7 +10,7 @@
     "check-data": "node scripts/check-data.mjs",
     "prebuild": "npm run check-data",
     "build": "astro build",
-    "postbuild": "node scripts/build-chat-index.mjs",
+    "postbuild": "node scripts/build-chat-index.mjs && node scripts/sitemap-classic.mjs",
     "preview": "astro preview"
   },
   "dependencies": {
