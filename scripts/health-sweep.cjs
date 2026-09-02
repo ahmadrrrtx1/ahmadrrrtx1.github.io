@@ -41,7 +41,7 @@ const routes = ["/", "/work/", "/work/xr/", "/work/xr-foundation-model/", "/work
   const ld = JSON.parse(pages[0].body.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
   const faq = ld["@graph"].find((x) => x["@type"] === "FAQPage");
   console.log("JSON-LD:", ld["@graph"].map((x) => x["@type"]).join(", "), "| sameAs:", ld["@graph"][0].sameAs.length, "| faq Qs:", faq.mainEntity.length, "| @id graph links:", JSON.stringify(ld).includes("#rrrtx"));
-  const dom = await JSDOM.fromURL(B + "/", { runScripts: "dangerously", pretendToBeVisual: true, beforeParse(w) { w.matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {} }); } });
+  const dom = await JSDOM.fromURL(B + "/", { runScripts: "dangerously", pretendToBeVisual: true, beforeParse(w) { w.matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {} }); w.fetch = (u, ...a) => (u.startsWith("http") ? u : B + u) === u ? fetch(u, ...a).then(async (r) => ({ ok: r.ok, json: () => r.json() })) : fetch(B + u, ...a).then(async (r) => ({ ok: r.ok, json: () => r.json() })); } });
   const w = dom.window;
   await new Promise((r) => setTimeout(r, 2600));
   w.document.getElementById("nav-btn").click();

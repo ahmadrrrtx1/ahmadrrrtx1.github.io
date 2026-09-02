@@ -32,5 +32,8 @@ jobs:
       name: github-pages
       url: ${{ steps.out.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
       - id: out
         uses: actions/deploy-pages@v4
+      - name: notify indexnow (Bing/Yandex/Naver/Seznam)
+        run: node scripts/notify-indexnow.mjs
